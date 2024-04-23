@@ -21,9 +21,12 @@ GNU General Public License for more details.
 #include "studio.h"
 #include "pm_local.h"
 #include "pmtrace.h"
+#include "ref_common.h"
 
 #define EVENT_CLIENT	5000	// less than this value it's a server-side studio events
 #define MAX_LOCALLIGHTS	4
+
+static CVAR_DEFINE( v_direct, "direct", "0.9", 0, "direct studio lighting" );
 
 typedef struct
 {
@@ -1477,7 +1480,7 @@ static void R_StudioDynamicLight( cl_entity_t *ent, alight_t *plight )
 
 	if( FBitSet( ent->model->flags, STUDIO_AMBIENT_LIGHT ))
 		add = 0.6f;
-	else add = bound( 0.75f, v_direct->value, 1.0f );
+	else add = bound( 0.75f, v_direct.value, 1.0f );
 
 	VectorScale( lightDir, add, lightDir );
 

@@ -49,6 +49,23 @@ void GL_RenderFrame( const struct ref_viewpass_s *rvp );
 extern convar_t	r_decals;
 extern convar_t	r_adjust_fov;
 extern convar_t gl_clear;
+//vars that help with compiling
+extern convar_t	*r_fullbright;
+extern convar_t	*r_norefresh;
+extern convar_t	*tracerred;
+extern convar_t	*tracergreen;
+extern convar_t	*tracerblue;
+extern convar_t	*traceralpha;
+extern convar_t	*r_sprite_lighting;
+extern convar_t	*r_sprite_lerping;
+extern convar_t	*r_drawviewmodel;
+extern convar_t	*r_dynamic;
+extern convar_t	*r_lightmap;
+extern convar_t	*r_lighting_modulate;
+extern convar_t	*r_glowshellfreq;
+extern convar_t	*r_speeds;
+extern convar_t	*r_drawentities;
+extern convar_t	*cl_himodels;
 
 qboolean R_Init( void );
 void R_Shutdown( void );

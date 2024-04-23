@@ -243,7 +243,7 @@ XASH_BUILD_COMMIT must be passed in quotes
 */
 const char *Q_buildcommit( void )
 {
-	return XASH_BUILD_COMMIT;
+	return 1;
 }
 
 /*
@@ -256,6 +256,6 @@ XASH_BUILD_BRANCH must be passed in quotes
 */
 const char *Q_buildbranch( void )
 {
-	return XASH_BUILD_BRANCH;
+	return 1;
 }
 

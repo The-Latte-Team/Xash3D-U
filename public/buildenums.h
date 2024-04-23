@@ -41,6 +41,7 @@ GNU General Public License for more details.
 #define PLATFORM_IRIX       12
 #define PLATFORM_NSWITCH    13
 #define PLATFORM_PSVITA     14
+#define PLATFORM_WIIU     	15
 
 #if XASH_WIN32
 	#define XASH_PLATFORM PLATFORM_WIN32
@@ -70,6 +71,8 @@ GNU General Public License for more details.
 	#define XASH_PLATFORM PLATFORM_NSWITCH
 #elif XASH_PSVITA
 	#define XASH_PLATFORM PLATFORM_PSVITA
+#elif XASH_WIIU
+	#define XASH_PLATFORM PLATFORM_WIIU
 #else
 	#error
 #endif

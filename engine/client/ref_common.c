@@ -577,6 +577,23 @@ static void R_CollectRendererNames( void )
 	ref.readableNames = readableNames;
 }
 
+convar_t	*r_fullbright;
+convar_t	*r_norefresh;
+convar_t	*tracerred;
+convar_t	*tracergreen;
+convar_t	*tracerblue;
+convar_t	*traceralpha;
+convar_t	*r_sprite_lighting;
+convar_t	*r_sprite_lerping;
+convar_t	*r_drawviewmodel;
+convar_t	*r_dynamic;
+convar_t	*r_lightmap;
+convar_t	*r_lighting_modulate;
+convar_t	*r_glowshellfreq;
+convar_t	*r_speeds;
+convar_t	*r_drawentities;
+convar_t	*cl_himodels;
+
 qboolean R_Init( void )
 {
 	qboolean success = false;
@@ -593,27 +610,27 @@ qboolean R_Init( void )
 	Cvar_RegisterVariable( &r_refdll_loaded );
 
 	// cvars that are expected to exist
-	Cvar_Get( "r_speeds", "0", FCVAR_ARCHIVE, "shows renderer speeds" );
-	Cvar_Get( "r_fullbright", "0", FCVAR_CHEAT, "disable lightmaps, get fullbright for entities" );
-	Cvar_Get( "r_norefresh", "0", 0, "disable 3D rendering (use with caution)" );
-	Cvar_Get( "r_dynamic", "1", FCVAR_ARCHIVE, "allow dynamic lighting (dlights, lightstyles)" );
-	Cvar_Get( "r_lightmap", "0", FCVAR_CHEAT, "lightmap debugging tool" );
-	Cvar_Get( "tracerred", "0.8", 0, "tracer red component weight ( 0 - 1.0 )" );
-	Cvar_Get( "tracergreen", "0.8", 0, "tracer green component weight ( 0 - 1.0 )" );
-	Cvar_Get( "tracerblue", "0.4", 0, "tracer blue component weight ( 0 - 1.0 )" );
-	Cvar_Get( "traceralpha", "0.5", 0, "tracer alpha amount ( 0 - 1.0 )" );
+	r_speeds = Cvar_Get( "r_speeds", "0", FCVAR_ARCHIVE, "shows renderer speeds" );
+	r_fullbright = Cvar_Get( "r_fullbright", "0", FCVAR_CHEAT, "disable lightmaps, get fullbright for entities" );
+	r_norefresh = Cvar_Get( "r_norefresh", "0", 0, "disable 3D rendering (use with caution)" );
+	r_dynamic = Cvar_Get( "r_dynamic", "1", FCVAR_ARCHIVE, "allow dynamic lighting (dlights, lightstyles)" );
+	r_lightmap = Cvar_Get( "r_lightmap", "0", FCVAR_CHEAT, "lightmap debugging tool" );
+	tracerred = Cvar_Get( "tracerred", "0.8", 0, "tracer red component weight ( 0 - 1.0 )" );
+	tracergreen = Cvar_Get( "tracergreen", "0.8", 0, "tracer green component weight ( 0 - 1.0 )" );
+	tracerblue = Cvar_Get( "tracerblue", "0.4", 0, "tracer blue component weight ( 0 - 1.0 )" );
+	traceralpha = Cvar_Get( "traceralpha", "0.5", 0, "tracer alpha amount ( 0 - 1.0 )" );
 
-	Cvar_Get( "r_sprite_lerping", "1", FCVAR_ARCHIVE, "enables sprite animation lerping" );
-	Cvar_Get( "r_sprite_lighting", "1", FCVAR_ARCHIVE, "enables sprite lighting (blood etc)" );
+	r_sprite_lerping = Cvar_Get( "r_sprite_lerping", "1", FCVAR_ARCHIVE, "enables sprite animation lerping" );
+	r_sprite_lighting = Cvar_Get( "r_sprite_lighting", "1", FCVAR_ARCHIVE, "enables sprite lighting (blood etc)" );
 
-	Cvar_Get( "r_drawviewmodel", "1", 0, "draw firstperson weapon model" );
-	Cvar_Get( "r_glowshellfreq", "2.2", 0, "glowing shell frequency update" );
+	r_drawviewmodel = Cvar_Get( "r_drawviewmodel", "1", 0, "draw firstperson weapon model" );
+	r_glowshellfreq = Cvar_Get( "r_glowshellfreq", "2.2", 0, "glowing shell frequency update" );
 
 	// cvars that are expected to exist by client.dll
 	// refdll should just get pointer to them
-	Cvar_Get( "r_lighting_modulate", "0.6", FCVAR_ARCHIVE, "compatibility cvar, does nothing" );
-	Cvar_Get( "r_drawentities", "1", FCVAR_CHEAT, "render entities" );
-	Cvar_Get( "cl_himodels", "1", FCVAR_ARCHIVE, "draw high-resolution player models in multiplayer" );
+	r_lighting_modulate = Cvar_Get( "r_lighting_modulate", "0.6", FCVAR_ARCHIVE, "compatibility cvar, does nothing" );
+	r_drawentities = Cvar_Get( "r_drawentities", "1", FCVAR_CHEAT, "render entities" );
+	cl_himodels = Cvar_Get( "cl_himodels", "1", FCVAR_ARCHIVE, "draw high-resolution player models in multiplayer" );
 
 	// cvars are created, execute video config
 	Cbuf_AddText( "exec video.cfg" );

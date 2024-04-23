@@ -16,6 +16,24 @@
 //
 
 #ifdef __WIIU__
+
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <dirent.h>
+
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+
+#define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
+
 #if XASH_SDLMAIN
 #include <SDL.h>
 #endif
@@ -38,6 +56,9 @@
 static char        szGameDir[128]; // safe place to keep gamedir
 static int         szArgc;
 static char        **szArgv;
+
+// Global variables
+bool launcherRunning = true;
 
 static void Sys_ChangeGame( const char *progname )
 {
@@ -79,70 +100,6 @@ static int Sys_Start( void )
 	return Host_Main( szArgc, szArgv, game, 0, Sys_ChangeGame );
 }
 
-#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <dirent.h>
-
-#include <vpad/input.h>
-#include <coreinit/screen.h>
-#include <coreinit/cache.h>
-#include <whb/proc.h>
-#include <whb/log_console.h>
-#include <whb/log.h>
-
-#define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
-
-// Global variables
-bool launcherRunning = true;
-
-char **foundWads = NULL;
-int foundWadsCount = 0;
-int selectedWadIndex = 0;
-
-/*void launcherUpdate(VPADStatus status)
-{
-    if (foundWadsCount > 0)
-    {
-        if (status.trigger & (VPAD_BUTTON_UP | VPAD_STICK_L_EMULATION_UP))
-            selectedWadIndex--;
-        if (status.trigger & (VPAD_BUTTON_DOWN | VPAD_STICK_L_EMULATION_DOWN))
-            selectedWadIndex++;
-
-        if (selectedWadIndex < 0)
-            selectedWadIndex = foundWadsCount - 1;
-        else if (selectedWadIndex >= foundWadsCount)
-            selectedWadIndex = 0;
-    }
-}*/
-
-/*void launcherDraw(OSScreenID screenID)
-{
-    OSScreenPutFontEx(screenID, 0, 0, "Xash3DU");
-
-    if (foundWadsCount > 0)
-    {
-        OSScreenPutFontEx(screenID, 0, 2, "Press up and down to select a WAD");
-        OSScreenPutFontEx(screenID, 0, 3, "Press + to start playing");
-        for (int i = 0; i < foundWadsCount; i++)
-        {
-            int y = i + 5;
-            OSScreenPutFontEx(screenID, 5, y, foundWads[i]);
-            if (selectedWadIndex == i)
-                OSScreenPutFontEx(screenID, 2, y, ">>");
-        }
-    }
-    else
-    {
-        OSScreenPutFontEx(screenID, 5, 2, "No WAD files found!");
-        OSScreenPutFontEx(screenID, 5, 3, "Put your WADs in: sd:/" HOMEBREW_APP_PATH "/wads");
-        OSScreenPutFontEx(screenID, 0, 5, "Press + to exit");
-    }
-}*/
-
 int main(int argc, char **argv)
 {
     // Init launcher
@@ -161,22 +118,10 @@ int main(int argc, char **argv)
     
     glw_state.software = true; //force it to be always software
     // Scan for WADs
-    foundWads = NULL;
-    foundWadsCount = 0;
-    struct dirent *files;
     DIR *dir = opendir(HOMEBREW_APP_PATH "/valve");
     if (dir != NULL)
     {
-        while ((files = readdir(dir)) != NULL)
-        {
-            foundWadsCount++;
-            foundWads = realloc(foundWads, foundWadsCount * sizeof(char *));
-            foundWads[foundWadsCount - 1] = strdup(files->d_name);
-        }
         valveFolderAvailable = true;
-        /*szArgc = argc;
-	    szArgv = argv;
-	    return Sys_Start();*/
         closedir(dir);
     }
     else
@@ -227,38 +172,14 @@ int main(int argc, char **argv)
             szArgc = argc;
 	        szArgv = argv;
 	        Sys_Start();
-
+            
             displayed = true;
         }
-        //launcherUpdate(status);
     }
 
     WHBLogConsoleFree();
 
-    if (foundWadsCount > 0)
-    {
-        if (wbhRunning)
-        {
-            // Build up "myargc" and "myargv" from stuff user selected
-            /*char *origArgv0 = myargv[0];
-
-            myargc = 3;
-            myargv = malloc(myargc * sizeof(char *));
-
-            myargv[0] = origArgv0;
-            myargv[1] = "-iwad";
-            myargv[2] = strdup(foundWads[selectedWadIndex]);*/
-        }
-
-        // Free found WADs
-        for (int i = 0; i < foundWadsCount; i++)
-        {
-            free(foundWads[i]);
-        }
-        free(foundWads);
-    }
-
-    if (!wbhRunning || foundWadsCount == 0)
+    if (!wbhRunning)
     {
         WHBProcShutdown();
         exit(0);
