@@ -169,9 +169,9 @@ int main(int argc, char **argv)
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
             //Launch the game
-            szArgc = argc;
+            /*szArgc = argc;
 	        szArgv = argv;
-	        Sys_Start();
+	        Sys_Start();*/
             
             displayed = true;
         }
