@@ -1,0 +1,41 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# mittorn, 2018
+
+from waflib import Logs
+import os
+
+top = '.'
+
+def options(opt):
+	# stub
+	return
+
+def configure(conf):
+	conf.load('gitversion')
+	conf.define('XASH_BUILD_COMMIT', conf.env.GIT_VERSION if conf.env.GIT_VERSION else 'unknown-commit')
+	conf.define('XASH_BUILD_BRANCH', conf.env.GIT_BRANCH  if conf.env.GIT_BRANCH  else 'unknown-branch')
+
+def build(bld):
+	bld(name = 'sdk_includes', export_includes = '. ../common ../pm_shared ../engine')
+	bld.stlib(source   = bld.path.ant_glob('*.c'),
+		target   = 'public',
+		features = 'c',
+		use      = 'sdk_includes werror',
+		subsystem = bld.env.MSVC_SUBSYSTEM)
+
+	if bld.env.TESTS:
+		tests = {
+			'strings': 'tests/test_strings.c',
+			'build': 'tests/test_build.c',
+			'filebase': 'tests/test_filebase.c',
+			'efp': 'tests/test_efp.c',
+		}
+
+		for i in tests:
+			bld.program(features = 'test',
+				source = tests[i],
+				target = 'test_%s' % i,
+				use = 'public',
+				subsystem = bld.env.CONSOLE_SUBSYSTEM,
+				install_path = None)
