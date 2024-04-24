@@ -40,11 +40,20 @@ SOURCES		:=	engine/common \
 				engine/client/vgui \
 				engine/server \
 				engine/platform/wiiu/launcher \
-				engine/platform/wiiu/sdl2/src \
 				engine/platform/sdl \
 				ref/soft \
 				ref/null \
-				3rdopary/mainui \
+				3rdparty/mainui \
+				3rdparty/mainui/font \
+				3rdparty/mainui/controls \
+				3rdparty/mainui/menus \
+				3rdparty/mainui/menus/dynamic \
+				3rdparty/mainui/miniutl \
+				3rdparty/mainui/model \
+				3rdparty/mainui/sdk_includes/common \
+				3rdparty/mainui/sdk_includes/engine \
+				3rdparty/mainui/sdk_includes/pm_shared \
+				3rdparty/mainui/sdk_includes/public \
 				public
 DATA		:=	data
 INCLUDES	:=	include \
@@ -68,7 +77,18 @@ INCLUDES	:=	include \
 				engine/platform/sdl \
 				ref/soft \
 				ref/null \
-				3rdopary/mainui
+				3rdparty/mainui \
+				3rdparty/mainui/font \
+				3rdparty/mainui/controls \
+				3rdparty/mainui/menus \
+				3rdparty/mainui/menus/dynamic \
+				3rdparty/mainui/miniutl \
+				3rdparty/mainui/model \
+				3rdparty/mainui/sdk_includes/common \
+				3rdparty/mainui/sdk_includes/engine \
+				3rdparty/mainui/sdk_includes/pm_shared \
+				3rdparty/mainui/sdk_includes/public \
+				public
 CONTENT		:=
 ICON		:=	engine/platform/wiiu/icon.png
 TV_SPLASH	:=
@@ -87,7 +107,7 @@ CXXFLAGS	:= $(CFLAGS)
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lwut -lm -lstdc++ -lSDL2 -lcurl -lSDL2_mixer -lSDL2_ttf
+LIBS	:= -lwut -lm -lstdc++ -lSDL2 -lcurl -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx -lSDL2_image
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level
