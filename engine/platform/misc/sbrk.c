@@ -13,18 +13,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 #define _GNU_SOURCE
+#if !defined(__WIIU__)
 #include <dlfcn.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#endif
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
-#define _GNU_SOURCE
-#include <dlfcn.h>
-#include "platform/swap/swap.h"
+#include "swap.h"
 #include "string.h"
 
 #ifndef XASH_DEFAULT_SWAP_PATH
@@ -60,7 +60,9 @@ static void SWAP_Initialize(void)
 
 	s.fd = fd;
 	ftruncate( fd, s.prealloc );
+	#if !defined(__WIIU__)
 	s.top = mmap( 0, s.prealloc, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0 );
+	#endif
 
 	// space will be freed on exit
 	//unlink(path);

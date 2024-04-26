@@ -22,7 +22,7 @@ GNU General Public License for more details.
 #define MEMHEADER_SENTINEL2	0xDFU
 
 #ifdef XASH_CUSTOM_SWAP
-#include "platform/swap/swap.h"
+#include "swap.h"
 #define Q_malloc SWAP_Malloc
 #define Q_free SWAP_Free
 
