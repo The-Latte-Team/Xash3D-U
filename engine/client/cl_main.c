@@ -23,6 +23,7 @@ GNU General Public License for more details.
 #include "library.h"
 #include "vid_common.h"
 #include "pm_local.h"
+#include "ref_common.h"
 
 #define MAX_TOTAL_CMDS		32
 #define MAX_CMD_BUFFER		8000
@@ -3216,7 +3217,7 @@ void CL_Shutdown( void )
 		g_fsapi.Delete( "demoheader.tmp" ); // remove tmp file
 	SCR_FreeCinematic (); // release AVI's *after* client.dll because custom renderer may use them
 	S_Shutdown ();
-	R_Shutdown ();
+	Shutdown ();
 
 	Con_Shutdown ();
 

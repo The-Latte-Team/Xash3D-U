@@ -37,7 +37,7 @@ extern struct ref_state_s ref;
 extern ref_globals_t refState;
 
 // handy API wrappers
-void R_GetTextureParms( int *w, int *h, int texnum );
+void R_GetTextureParmss( int *w, int *h, int texnum );
 #define REF_GET_PARM( parm, arg ) ref.dllFuncs.RefGetParm( (parm), (arg) )
 #define GL_LoadTextureInternal( name, pic, flags ) ref.dllFuncs.GL_LoadTextureFromBuffer( (name), (pic), (flags), false )
 #define GL_UpdateTextureInternal( name, pic, flags ) ref.dllFuncs.GL_LoadTextureFromBuffer( (name), (pic), (flags), true )
@@ -67,8 +67,8 @@ extern convar_t	*r_speeds;
 extern convar_t	*r_drawentities;
 extern convar_t	*cl_himodels;
 
-qboolean R_Init( void );
-void R_Shutdown( void );
+qboolean Init( void );
+void Shutdown( void );
 
 extern triangleapi_t gTriApi;
 

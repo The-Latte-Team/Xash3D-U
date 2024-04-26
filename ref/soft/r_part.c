@@ -90,7 +90,7 @@ void GAME_EXPORT CL_DrawParticles( double frametime, particle_t *cl_active_parti
 			if( alpha > 255 || p->type == pt_static )
 				alpha = 255;
 
-			//TriColor4ub( gEngfuncs.LightToTexGamma( color.r ),
+			//TriColor4ub2( gEngfuncs.LightToTexGamma( color.r ),
 			//	gEngfuncs.LightToTexGamma( color.g ),
 		//		gEngfuncs.LightToTexGamma( color.b ), alpha );
 			//TriBrightness( alpha / 255.0f );
@@ -186,7 +186,7 @@ void GAME_EXPORT CL_DrawTracers( double frametime, particle_t *cl_active_tracers
 
 	GL_SetRenderMode( kRenderTransAdd );
 
-	if( !TriSpriteTexture( gEngfuncs.GetDefaultSprite( REF_DOT_SPRITE ), 0 ))
+	if( !TriSpriteTexture2( gEngfuncs.GetDefaultSprite( REF_DOT_SPRITE ), 0 ))
 		return;
 
 	//pglEnable( GL_BLEND );
@@ -215,8 +215,8 @@ void GAME_EXPORT CL_DrawTracers( double frametime, particle_t *cl_active_tracers
 			short alpha = p->packedColor;
 
 			// Transform point into screen space
-			TriWorldToScreen( start, screen );
-			TriWorldToScreen( end, screenLast );
+			TriWorldToScreen2( start, screen );
+			TriWorldToScreen2( end, screenLast );
 
 			// build world-space normal to screen-space direction vector
 			VectorSubtract( screen, screenLast, tmp );
@@ -243,7 +243,7 @@ void GAME_EXPORT CL_DrawTracers( double frametime, particle_t *cl_active_tracers
 			}
 
 			color = gTracerColors[p->color];
-			//TriColor4ub( color.r, color.g, color.b, p->packedColor );
+			//TriColor4ub2( color.r, color.g, color.b, p->packedColor );
 			_TriColor4f(1.0f*alpha/255/255*color.r,1.0f*alpha/255/255*color.g,1.0f*alpha/255/255* color.b,1.0f );
 
 

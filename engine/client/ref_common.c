@@ -43,7 +43,7 @@ REF_HOST_CHECK( realtime );
 REF_HOST_CHECK( frametime );
 REF_HOST_CHECK( features );
 
-void R_GetTextureParms( int *w, int *h, int texnum )
+void R_GetTextureParmss( int *w, int *h, int texnum )
 {
 	if( w ) *w = REF_GET_PARM( PARM_TEX_WIDTH, texnum );
 	if( h ) *h = REF_GET_PARM( PARM_TEX_HEIGHT, texnum );
@@ -430,7 +430,7 @@ static qboolean R_LoadProgs( const char *name )
 	return true;
 }
 
-void R_Shutdown( void )
+void Shutdown( void )
 {
 	int i;
 	model_t *mod;
@@ -487,7 +487,7 @@ static qboolean R_LoadRenderer( const char *refopt )
 
 	if( !R_LoadProgs( refdll ))
 	{
-		R_Shutdown();
+		Shutdown();
 		Sys_Warn( S_ERROR "Can't initialize %s renderer!\n", refdll );
 		return false;
 	}
@@ -594,7 +594,7 @@ convar_t	*r_speeds;
 convar_t	*r_drawentities;
 convar_t	*cl_himodels;
 
-qboolean R_Init( void )
+qboolean Init( void )
 {
 	qboolean success = false;
 	string requested;

@@ -43,7 +43,7 @@ TriRenderMode
 set rendermode
 =============
 */
-void GAME_EXPORT TriRenderMode( int mode )
+void GAME_EXPORT TriRenderMode2( int mode )
 {
 	ds.renderMode = vid.rendermode = mode;
 #if 0
@@ -187,11 +187,11 @@ void GAME_EXPORT _TriColor4f( float rr, float gg, float bb, float aa )
 
 /*
 =============
-TriColor4ub
+TriColor4ub2
 
 =============
 */
-void TriColor4ub( byte r, byte g, byte b, byte a )
+void TriColor4ub2( byte r, byte g, byte b, byte a )
 {
 	ds.triRGBA[0] = r * (1.0f / 255.0f);
 	ds.triRGBA[1] = g * (1.0f / 255.0f);
@@ -203,7 +203,7 @@ void TriColor4ub( byte r, byte g, byte b, byte a )
 
 /*
 =============
-TriColor4ub
+TriColor4ub2
 
 =============
 */
@@ -220,12 +220,12 @@ void GAME_EXPORT _TriColor4ub( byte r, byte g, byte b, byte a )
 TriColor4f
 =================
 */
-void TriColor4f( float r, float g, float b, float a )
+void TriColor4f2( float r, float g, float b, float a )
 {
 	//if( a < 0.5 )
 	//	a = 1;
 	if( ds.renderMode == kRenderTransAlpha )
-		TriColor4ub( r * 255.0f, g * 255.0f, b * 255.0f, a * 255.0f );
+		TriColor4ub2( r * 255.0f, g * 255.0f, b * 255.0f, a * 255.0f );
 	else _TriColor4f( r * a, g * a, b * a, 1.0 );
 
 	ds.triRGBA[0] = r;
@@ -354,7 +354,7 @@ TriWorldToScreen
 convert world coordinates (x,y,z) into screen (x, y)
 =============
 */
-int GAME_EXPORT TriWorldToScreen( const float *world, float *screen )
+int GAME_EXPORT TriWorldToScreen2( const float *world, float *screen )
 {
 	return R_WorldToScreen( world, screen );
 }
@@ -366,7 +366,7 @@ TriSpriteTexture
 bind current texture
 =============
 */
-int TriSpriteTexture( model_t *pSpriteModel, int frame )
+int TriSpriteTexture2( model_t *pSpriteModel, int frame )
 {
 	int	gl_texturenum;
 
@@ -455,7 +455,7 @@ TriCullFace
 
 =============
 */
-void GAME_EXPORT TriCullFace( TRICULLSTYLE mode )
+void GAME_EXPORT TriCullFace2( TRICULLSTYLE mode )
 {
 #if 0
 	int glMode;
@@ -479,7 +479,7 @@ void GAME_EXPORT TriCullFace( TRICULLSTYLE mode )
 TriBrightness
 =============
 */
-void TriBrightness( float brightness )
+void TriBrightness2( float brightness )
 {
 	float	r, g, b;
 

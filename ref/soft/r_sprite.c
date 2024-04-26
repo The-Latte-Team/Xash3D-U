@@ -139,7 +139,7 @@ Mod_LoadSpriteModel
 load sprite model
 ====================
 */
-void Mod_LoadSpriteModel( model_t *mod, const void *buffer, qboolean *loaded, uint texFlags )
+void Mod_LoadSpriteModel2( model_t *mod, const void *buffer, qboolean *loaded, uint texFlags )
 {
 	const dsprite_t		*pin;
 	const short		*numi = NULL;
@@ -701,7 +701,7 @@ static qboolean R_SpriteOccluded( cl_entity_t *e, vec3_t origin, float *pscale )
 		float	blend;
 		vec3_t	v;
 
-		TriWorldToScreen( origin, v );
+		TriWorldToScreen2( origin, v );
 
 		if( v[0] < RI.viewport[0] || v[0] > RI.viewport[0] + RI.viewport[2] )
 			return true; // do scissor

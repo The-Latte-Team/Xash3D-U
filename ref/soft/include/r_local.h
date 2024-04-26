@@ -432,7 +432,7 @@ void R_UploadStretchRaw( int texture, int cols, int rows, int width, int height,
 // gl_image.c
 //
 void R_SetTextureParameters( void );
-image_t *R_GetTexture( unsigned int texnum );
+image_t *R_GetTexture( unsigned int texnum ); 	
 #define GL_LoadTextureInternal( name, pic, flags ) GL_LoadTextureFromBuffer( name, pic, flags, false )
 #define GL_UpdateTextureInternal( name, pic, flags ) GL_LoadTextureFromBuffer( name, pic, flags, true )
 int GL_LoadTexture( const char *name, const byte *buf, size_t size, int flags );
@@ -633,6 +633,7 @@ void R_BeginFrame( qboolean clearScene );
 void R_RenderFrame( const struct ref_viewpass_s *vp );
 void R_EndFrame( void );
 void R_ClearScene( void );
+void R_GetTextureParms( int *w, int *h, int texnum );
 void R_GetSpriteParms( int *frameWidth, int *frameHeight, int *numFrames, int curFrame, const struct model_s *pSprite );
 void R_DrawStretchRaw( float x, float y, float w, float h, int cols, int rows, const byte *data, qboolean dirty );
 void R_DrawStretchPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2, int texnum );
@@ -675,23 +676,23 @@ void GL_SetExtension( int r_ext, int enable );
 //
 // gl_triapi.c
 //
-void TriRenderMode( int mode );
+void TriRenderMode2( int mode );
 void TriBegin( int mode );
 void TriEnd( void );
 void TriTexCoord2f( float u, float v );
 void TriVertex3fv( const float *v );
 void TriVertex3f( float x, float y, float z );
-void TriColor4f( float r, float g, float b, float a );
+void TriColor4f2( float r, float g, float b, float a );
 void _TriColor4f( float r, float g, float b, float a );
-void TriColor4ub( byte r, byte g, byte b, byte a );
+void TriColor4ub2( byte r, byte g, byte b, byte a );
 void _TriColor4ub( byte r, byte g, byte b, byte a );
-int TriWorldToScreen( const float *world, float *screen );
-int TriSpriteTexture( model_t *pSpriteModel, int frame );
+int TriWorldToScreen2( const float *world, float *screen );
+int TriSpriteTexture2( model_t *pSpriteModel, int frame );
 void TriFog( float flFogColor[3], float flStart, float flEnd, int bOn );
 void TriGetMatrix( const int pname, float *matrix );
 void TriFogParams( float flDensity, int iFogSkybox );
-void TriCullFace( TRICULLSTYLE mode );
-void TriBrightness( float brightness );
+void TriCullFace2( TRICULLSTYLE mode );
+void TriBrightness2( float brightness );
 
 #define ENGINE_GET_PARM_ (*gEngfuncs.EngineGetParm)
 #define ENGINE_GET_PARM( parm ) ENGINE_GET_PARM_( (parm), 0 )

@@ -37,7 +37,7 @@ TriRenderMode
 set rendermode
 =============
 */
-void TriRenderMode( int mode )
+void TriRenderMode2( int mode )
 {
 	ds.renderMode = mode;
 	switch( mode )

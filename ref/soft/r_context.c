@@ -519,7 +519,7 @@ ref_interface_t gReffuncs =
 	R_ClearScene,
 	R_GetProcAddress,
 
-	TriRenderMode,
+	TriRenderMode2,
 	TriBegin,
 	TriEnd,
 	_TriColor4f,
@@ -531,7 +531,7 @@ ref_interface_t gReffuncs =
 	R_ScreenToWorld,
 	TriGetMatrix,
 	TriFogParams,
-	TriCullFace,
+	TriCullFace2,
 
 	VGUI_DrawInit,
 	VGUI_DrawShutdown,
