@@ -14,7 +14,7 @@ GNU General Public License for more details.
 */
 
 #include "build.h"
-#if !XASH_WIN32 || !XASH_WIIU
+#if !XASH_WIN32
 #include "common.h"
 
 int AVI_GetVideoFrameNumber( movie_state_t *Avi, float time )

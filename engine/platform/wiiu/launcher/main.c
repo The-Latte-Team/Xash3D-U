@@ -78,25 +78,6 @@ static int Sys_Start( void )
 
 	Q_strncpy( szGameDir, game, sizeof( szGameDir ));
 
-#if XASH_EMSCRIPTEN
-#ifdef EMSCRIPTEN_LIB_FS
-	// For some unknown reason emscripten refusing to load libraries later
-	COM_LoadLibrary( "menu", 0 );
-	COM_LoadLibrary( "server", 0 );
-	COM_LoadLibrary( "client", 0 );
-#endif
-#if XASH_DEDICATED
-	// NodeJS support for debug
-	EM_ASM(try {
-		FS.mkdir( '/xash' );
-		FS.mount( NODEFS, { root: '.'}, '/xash' );
-		FS.chdir( '/xash' );
-	} catch( e ) { };);
-#endif
-#elif XASH_IOS
-	IOS_LaunchDialog();
-#endif
-
 	return Host_Main( szArgc, szArgv, game, 0, Sys_ChangeGame );
 }
 
@@ -117,7 +98,6 @@ int main(int argc, char **argv)
     bool valveFolderAvailable = false;
     
     glw_state.software = true; //force it to be always software
-    // Scan for WADs
     DIR *dir = opendir(HOMEBREW_APP_PATH "/valve");
     if (dir != NULL)
     {
@@ -128,12 +108,10 @@ int main(int argc, char **argv)
     {
         WHBLogPrintf("No Valve folder found!");
         WHBLogPrintf("Put your Valve folder files in: sd:/" HOMEBREW_APP_PATH "/valve");
-        WHBLogPrintf("Reopen the app when you have them on the SD Card");
         valveFolderAvailable = false;
 
         WHBLogConsoleDraw();
     }
-    //WHBLogPrintf("Press + to start playing");
 
     // I need this variable because with out it, WHBProcIsRunning becomes true
     // again before exiting, causing a crash
@@ -169,11 +147,12 @@ int main(int argc, char **argv)
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
             //Launch the game
-            /*szArgc = argc;
+            szArgc = argc;
 	        szArgv = argv;
-	        Sys_Start();*/
+	        //Sys_Start(); we don't wanna launch yet
             
             displayed = true;
+            WHBLogPrintf("If we're here, game didn't load");
         }
     }
 

@@ -41,20 +41,8 @@ SOURCES		:=	engine/common \
 				engine/server \
 				engine/platform/wiiu/launcher \
 				engine/platform/sdl \
-				ref/soft \
-				ref/null \
-				3rdparty/mainui \
-				3rdparty/mainui/font \
-				3rdparty/mainui/controls \
-				3rdparty/mainui/menus \
-				3rdparty/mainui/menus/dynamic \
-				3rdparty/mainui/miniutl \
-				3rdparty/mainui/model \
-				3rdparty/mainui/sdk_includes/common \
-				3rdparty/mainui/sdk_includes/engine \
-				3rdparty/mainui/sdk_includes/pm_shared \
-				3rdparty/mainui/sdk_includes/public \
-				public
+				public \
+				ref/soft
 DATA		:=	data
 INCLUDES	:=	include \
 				engine \
@@ -68,27 +56,14 @@ INCLUDES	:=	include \
 				engine/client \
 				engine/client/vgui \
 				pm_shared \
-				public \
 				filesystem \
 				3rdparty/opus/opus/include \
 				engine/platform/wiiu/launcher \
 				engine/platform/wiiu/sdl2/include \
-				engine/platform/wiiu/sdl2/src \
 				engine/platform/sdl \
-				ref/soft \
-				ref/null \
+				public \
 				3rdparty/mainui \
-				3rdparty/mainui/font \
-				3rdparty/mainui/controls \
-				3rdparty/mainui/menus \
-				3rdparty/mainui/menus/dynamic \
-				3rdparty/mainui/miniutl \
-				3rdparty/mainui/model \
-				3rdparty/mainui/sdk_includes/common \
-				3rdparty/mainui/sdk_includes/engine \
-				3rdparty/mainui/sdk_includes/pm_shared \
-				3rdparty/mainui/sdk_includes/public \
-				public
+				ref/soft/include
 CONTENT		:=
 ICON		:=	engine/platform/wiiu/icon.png
 TV_SPLASH	:=
