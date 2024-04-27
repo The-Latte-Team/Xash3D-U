@@ -77,7 +77,6 @@ int main(int argc, char **argv)
 
     bool valveFolderAvailable = false;
     
-    glw_state.software = true; //force it to be always software
     DIR *dir = opendir(HOMEBREW_APP_PATH "/valve");
     if (dir != NULL)
     {
@@ -126,6 +125,7 @@ int main(int argc, char **argv)
             WHBLogConsoleDraw();
 
             //Launch the game
+            glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
 	        //Sys_Start(); //we don't wanna launch yet
