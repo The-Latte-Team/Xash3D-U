@@ -62,7 +62,7 @@ INCLUDES	:=	include \
 				3rdparty/opus/opus/include \
 				engine/platform/wiiu/launcher \
 				engine/platform/wiiu \
-				engine/platform/wiiu/sdl2/include \
+				engine/platform/wiiu/sdl2 \
 				engine/platform/sdl \
 				engine/platform/misc \
 				engine/platform \
