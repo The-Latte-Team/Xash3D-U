@@ -42,6 +42,7 @@ GNU General Public License for more details.
 #include "enginefeatures.h"
 #include "render_api.h"	// decallist_t
 #include "tests.h"
+#include "net_ws.h"
 
 pfnChangeGame	pChangeGame = NULL;
 host_parm_t		host;	// host parms

@@ -23,8 +23,12 @@ GNU General Public License for more details.
 #include "platform/win32/net.h"
 #elif defined XASH_NO_NETWORK
 #include "platform/stub/net_stub.h"
-#else
-#include "platform/posix/net.h"
+#else //Nested, but my brained is too fried to do things properly
+	#if XASH_WIIU
+		#include "platform/stub/net_stub.h"
+	#else
+		#include "platform/posix/net.h"
+	#endif
 #endif
 #if XASH_PSVITA
 #include "platform/psvita/net_psvita.h"

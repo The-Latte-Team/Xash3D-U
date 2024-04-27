@@ -202,25 +202,7 @@ void *COM_FunctionFromName( void *hInstance, const char *pName )
 
 const char *COM_NameForFunction( void *hInstance, void *function )
 {
-#ifdef XASH_DLL_LOADER
-	void *wm;
-	if( host.enabledll && (wm = Loader_GetDllHandle( hInstance )) )
-#error ConvertMangledName
-		return Loader_GetFuncName_int(wm, function);
-	else
-#endif
-	// NOTE: dladdr() is a glibc extension
-	{
-		Dl_info info = {0};
-		int ret = dladdr( (void*)function, &info );
-		if( ret && info.dli_sname )
-			return COM_GetPlatformNeutralName( info.dli_sname );
-	}
-#ifdef XASH_ALLOW_SAVERESTORE_OFFSETS
-	return COM_OffsetNameForFunction( function );
-#else
 	return NULL;
-#endif
 }
 
 #endif // _WIN32
