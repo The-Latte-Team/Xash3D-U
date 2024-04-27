@@ -36,6 +36,7 @@ SOURCES		:=	engine/common \
 				engine/common/imagelib \
 				engine/common/soundlib \
 				engine/common/soundlib/libmpg \
+				engine/client/avi \
 				engine/client \
 				engine/client/vgui \
 				engine/server \
@@ -48,13 +49,13 @@ SOURCES		:=	engine/common \
 				public \
 				ref/soft
 DATA		:=	data
-INCLUDES	:=	include \
-				engine \
+INCLUDES	:=	engine \
 				engine/common \
 				engine/common/imagelib \
 				engine/common/soundlib \
 				engine/common/soundlib/libmpg \
 				engine/common/stb \
+				engine/client/avi \
 				common \
 				engine/server \
 				engine/client \
@@ -100,7 +101,7 @@ CXXFLAGS	:= $(CFLAGS)
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lwut -lm -lstdc++ -lSDL2 -lcurl
+LIBS	:= -lwut -lSDL2 -lm -lstdc++ -lcurl
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level

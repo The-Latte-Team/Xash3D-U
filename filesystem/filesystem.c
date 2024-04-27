@@ -43,6 +43,9 @@ GNU General Public License for more details.
 #include "xash3d_mathlib.h"
 #include "common/com_strings.h"
 #include "common/protocol.h"
+#if XASH_WIIU
+#include "dll_cafe.h"
+#endif
 
 #define FILE_COPY_SIZE		(1024 * 1024)
 
