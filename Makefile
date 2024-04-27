@@ -68,6 +68,15 @@ INCLUDES	:=	include \
 				engine/platform \
 				public \
 				3rdparty/mainui \
+				3rdparty/mainui/font \
+				3rdparty/mainui/controls \
+				3rdparty/mainui/menus \
+				3rdparty/mainui/menus/dynamic \
+				3rdparty/mainui/miniutl \
+				3rdparty/mainui/model \
+				3rdparty/mainui/sdk_includes/common \
+				3rdparty/mainui/sdk_includes/engine \
+				3rdparty/mainui/sdk_includes/pm_shared \
 				ref/soft/include
 CONTENT		:=
 ICON		:=	engine/platform/wiiu/icon.png
