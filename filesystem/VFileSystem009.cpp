@@ -13,10 +13,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 */
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <stdarg.h>
-#include ALLOCA_H
+//#include ALLOCA_H
 #include "crtlib.h"
 #include "filesystem.h"
 #include "filesystem_internal.h"
@@ -41,7 +42,7 @@ GNU General Public License for more details.
 // shouldn't leave current scope
 #define FixupPath( var, str ) \
 	const size_t var ## _size = Q_strlen(( str )) + 1; \
-	char * const var = static_cast<char *>( alloca( var ## _size )); \
+	char * const var = static_cast<char *>( malloc( var ## _size )); \
 	CopyAndFixSlashes( var, ( str ), var ## _size )
 
 static inline bool IsIdGamedir( const char *id )

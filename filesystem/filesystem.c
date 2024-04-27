@@ -1508,7 +1508,7 @@ qboolean FS_InitStdio( qboolean unused_set_to_true, const char *rootdir, const c
 
 	// validate directories
 	stringlistinit( &dirs );
-	listdirectory( &dirs, "./" );
+	listdirectory( &dirs, "sd:/wiiu/apps/xash3DU" );
 	stringlistsort( &dirs );
 
 	for( i = 0; i < dirs.numstrings; i++ )

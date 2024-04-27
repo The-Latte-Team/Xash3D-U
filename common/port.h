@@ -48,6 +48,7 @@ GNU General Public License for more details.
 		#elif XASH_WIIU
 			#define RTLD_NOW 0
 			#define XASH_SDL 2
+			#define O_BINARY 0
 		#else
 			#include <dlfcn.h>
 			#define HAVE_DUP

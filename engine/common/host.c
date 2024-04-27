@@ -31,6 +31,7 @@ GNU General Public License for more details.
 #endif
 #include <errno.h>
 #include "common.h"
+#include <net_ws.h>
 #include "base_cmd.h"
 #include "client.h"
 #include "server.h"
@@ -38,7 +39,6 @@ GNU General Public License for more details.
 #include "protocol.h"
 #include "mod_local.h"
 #include "xash3d_mathlib.h"
-#include "net_ws.h"
 #include "input.h"
 #include "enginefeatures.h"
 #include "render_api.h"	// decallist_t
@@ -1107,7 +1107,7 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 	{
 #if TARGET_OS_IOS
 		Q_strncpy( host.rootdir, IOS_GetDocsDir(), sizeof( host.rootdir ));
-#elif XASH_ANDROID && XASH_SDL
+#elif XASH_ANDROID && XASH_SDL && !XASH_WIIU
 		Q_strncpy( host.rootdir, SDL_AndroidGetExternalStoragePath(), sizeof( host.rootdir ));
 #elif XASH_PSVITA
 		if ( !PSVita_GetBasePath( host.rootdir, sizeof( host.rootdir )))
@@ -1115,7 +1115,9 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 			Sys_Error( "couldn't find xash3d data directory" );
 			host.rootdir[0] = 0;
 		}
-#elif (XASH_SDL == 2) && !XASH_NSWITCH // GetBasePath not impl'd in switch-sdl2
+#elif XASH_WIIU
+		Q_strncpy( host.rootdir, "sd:/wiiu/apps/xash3DU", sizeof(host.rootdir) );
+#elif (XASH_SDL == 2) && !XASH_NSWITCH && !XASH_WIIU // GetBasePath not impl'd in switch-sdl2
 		char *szBasePath = SDL_GetBasePath();
 		if( szBasePath )
 		{

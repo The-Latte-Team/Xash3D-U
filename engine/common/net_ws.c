@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include "netchan.h"
 #include "xash3d_mathlib.h"
 #include "ipv6text.h"
+#include "net_ws.h"
 #if XASH_WIN32
 #include "platform/win32/net.h"
 #elif defined XASH_NO_NETWORK
@@ -357,7 +358,7 @@ static qboolean NET_GetHostByName( const char *hostname, int family, struct sock
 #endif
 }
 
-#if !XASH_EMSCRIPTEN && !XASH_DOS4GW && !defined XASH_NO_ASYNC_NS_RESOLVE
+#if !XASH_EMSCRIPTEN && !XASH_DOS4GW && !XASH_WIIU && !defined XASH_NO_ASYNC_NS_RESOLVE
 #define CAN_ASYNC_NS_RESOLVE
 #endif // !XASH_EMSCRIPTEN && !XASH_DOS4GW && !defined XASH_NO_ASYNC_NS_RESOLVE
 
