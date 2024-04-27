@@ -128,7 +128,7 @@ int main(int argc, char **argv)
             //Launch the game
             szArgc = argc;
 	        szArgv = argv;
-	        Sys_Start(); //we don't wanna launch yet
+	        //Sys_Start(); //we don't wanna launch yet
             
             displayed = true;
             WHBLogPrintf("If we're here, game didn't load");
