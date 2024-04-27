@@ -36,12 +36,7 @@ typedef enum
 // Max length of a multicast message
 #define MAX_MULTICAST		8192	// some mods spamming for rain effect
 
-
-#if !XASH_LOW_MEMORY
 #define MAX_INIT_MSG		0x30000	// max length of possible message
-#else
-#define MAX_INIT_MSG		0x8000
-#endif
 // net packets type
 #define NET_HEADER_OUTOFBANDPACKET	-1
 #define NET_HEADER_SPLITPACKET	-2
@@ -78,17 +73,17 @@ void NET_ClearLagData( qboolean bClient, qboolean bServer );
 void NET_IP6BytesToNetadr( netadr_t *adr, const uint8_t *ip6 );
 void NET_NetadrToIP6Bytes( uint8_t *ip6, const netadr_t *adr );
 
-#if !XASH_DEDICATED
-qboolean CL_LegacyMode( void );
-int CL_GetSplitSize( void );
-#endif
-
+void HTTP_Run( void );
 void HTTP_AddCustomServer( const char *url );
 void HTTP_AddDownload( const char *path, int size, qboolean process );
 void HTTP_ClearCustomServers( void );
 void HTTP_Shutdown( void );
 void HTTP_ResetProcessState( void );
 void HTTP_Init( void );
-void HTTP_Run( void );
+
+#if !XASH_DEDICATED
+qboolean CL_LegacyMode( void );
+int CL_GetSplitSize( void );
+#endif
 
 #endif//NET_WS_H

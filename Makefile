@@ -43,6 +43,7 @@ SOURCES		:=	engine/common \
 				engine/platform/wiiu \
 				engine/platform/sdl \
 				engine/platform/posix \
+				engine/platform/stub \
 				engine/platform/misc \
 				public \
 				ref/soft
@@ -66,6 +67,7 @@ INCLUDES	:=	include \
 				engine/platform/wiiu/sdl2 \
 				engine/platform/sdl \
 				engine/platform/misc \
+				engine/platform/stub \
 				engine/platform/posix \
 				engine/platform/ \
 				public \
