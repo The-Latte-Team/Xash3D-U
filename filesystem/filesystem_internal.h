@@ -156,7 +156,7 @@ void FS_AddGameDirectory( const char *dir, uint flags );
 void FS_AddGameHierarchy( const char *dir, uint flags );
 search_t *FS_Search( const char *pattern, int caseinsensitive, int gamedironly );
 int FS_SetCurrentDirectory( const char *path );
-void FS_Path_f( void );
+//void FS_Path_f( void );
 
 // gameinfo utils
 void FS_LoadGameInfo( const char *rootfolder );

@@ -21,7 +21,7 @@ GNU General Public License for more details.
 #include "platform/irix/dladdr.h"
 #endif
 #include "common.h"
-#include "library.h"
+#include "lib_common.h"
 #include "filesystem.h"
 #include "server.h"
 #include "platform/android/lib_android.h"

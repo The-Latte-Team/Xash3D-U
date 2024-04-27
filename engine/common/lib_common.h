@@ -1,5 +1,5 @@
 /*
-library.h - custom dlls loader
+lib_common.h - custom dlls loader
 Copyright (C) 2008 Uncle Mike
 
 This program is free software: you can redistribute it and/or modify
@@ -13,8 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#ifndef LIB_COMMON_H
+#define LIB_COMMON_H
 
 #define MAX_LIBRARY_EXPORTS		4096
 
@@ -85,4 +85,4 @@ char **COM_ConvertToLocalPlatform( EFunctionMangleType to, const char *from, siz
 char *COM_GetMSVCName( const char *in_name );
 
 
-#endif//LIBRARY_H
+#endif //LIB_COMMON_H

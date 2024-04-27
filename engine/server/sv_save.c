@@ -15,7 +15,7 @@ GNU General Public License for more details.
 
 #include "common.h"
 #include "server.h"
-#include "library.h"
+#include "lib_common.h"
 #include "const.h"
 #include "render_api.h"	// decallist_t
 #include "sound.h"		// S_GetDynamicSounds

@@ -20,7 +20,7 @@ GNU General Public License for more details.
 #include "input.h"
 #include "kbutton.h"
 #include "vgui_draw.h"
-#include "library.h"
+#include "lib_common.h"
 #include "vid_common.h"
 #include "pm_local.h"
 #include "ref_common.h"

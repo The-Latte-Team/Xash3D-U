@@ -40,6 +40,7 @@ SOURCES		:=	engine/common \
 				engine/client/vgui \
 				engine/server \
 				engine/platform/wiiu/launcher \
+				engine/platform/wiiu \
 				engine/platform/sdl \
 				engine/platform/misc \
 				public \
@@ -60,9 +61,11 @@ INCLUDES	:=	include \
 				filesystem \
 				3rdparty/opus/opus/include \
 				engine/platform/wiiu/launcher \
+				engine/platform/wiiu \
 				engine/platform/wiiu/sdl2/include \
 				engine/platform/sdl \
 				engine/platform/misc \
+				engine/platform \
 				public \
 				3rdparty/mainui \
 				ref/soft/include
@@ -84,7 +87,7 @@ CXXFLAGS	:= $(CFLAGS)
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lwut -lm -lstdc++ -lSDL2 -lcurl -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx -lSDL2_image
+LIBS	:= -lwut -lm -lstdc++ -lSDL2 -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lcurl
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level

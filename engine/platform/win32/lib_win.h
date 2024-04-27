@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-#include "library.h"
+#include "lib_common.h"
 #include <winnt.h>
 #include <psapi.h>
 #include STDINT_H

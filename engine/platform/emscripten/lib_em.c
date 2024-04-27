@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include "common.h"
-#include "library.h"
+#include "lib_common.h"
 #include "filesystem.h"
 #include "server.h"
 

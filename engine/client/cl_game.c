@@ -25,7 +25,7 @@ GNU General Public License for more details.
 #include "input.h"
 #include "shake.h"
 #include "sprite.h"
-#include "library.h"
+#include "lib_common.h"
 #include "vgui_draw.h"
 #include "sound.h"		// SND_STOP_LOOPING
 #include "platform/platform.h"

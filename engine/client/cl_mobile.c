@@ -16,7 +16,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "client.h"
 #include "mobility_int.h"
-#include "library.h"
+#include "lib_common.h"
 #include "input.h"
 #include "platform/platform.h"
 

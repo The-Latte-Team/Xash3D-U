@@ -17,8 +17,8 @@ GNU General Public License for more details.
 */
 
 #include "common.h"
-#include "library.h"
-#include "platform/platform.h"
+#include "lib_common.h"
+#include "platform.h"
 
 fs_api_t g_fsapi;
 fs_globals_t *FI;
@@ -46,7 +46,7 @@ static void FS_ClearPaths_f( void )
 
 static void FS_Path_f_( void )
 {
-	FS_Path_f();
+	//FS_Path_f();
 }
 
 static fs_interface_t fs_memfuncs =

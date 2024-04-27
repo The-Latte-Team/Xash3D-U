@@ -1,20 +1,3 @@
-//
-// Copyright(C) 2021 Terry Hearst
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-//	Wii U Launcher/WAD picker implementation
-//
-
 #ifdef __WIIU__
 
 #include <stdio.h>
@@ -56,9 +39,6 @@
 static char        szGameDir[128]; // safe place to keep gamedir
 static int         szArgc;
 static char        **szArgv;
-
-// Global variables
-bool launcherRunning = true;
 
 static void Sys_ChangeGame( const char *progname )
 {
@@ -106,6 +86,7 @@ int main(int argc, char **argv)
     }
     else
     {
+        WHBLogConsoleSetColor(0xAB3531);
         WHBLogPrintf("No Valve folder found!");
         WHBLogPrintf("Put your Valve folder files in: sd:/" HOMEBREW_APP_PATH "/valve");
         valveFolderAvailable = false;
@@ -113,12 +94,9 @@ int main(int argc, char **argv)
         WHBLogConsoleDraw();
     }
 
-    // I need this variable because with out it, WHBProcIsRunning becomes true
-    // again before exiting, causing a crash
-    int wbhRunning = true;
     bool displayed = false;
 
-    while (launcherRunning && (wbhRunning = WHBProcIsRunning()))
+    while (WHBProcIsRunning())
     {
         // Poll input
         VPADRead(VPAD_CHAN_0, &status, 1, &error);
@@ -146,23 +124,22 @@ int main(int argc, char **argv)
         if(valveFolderAvailable && !displayed){
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
+
             //Launch the game
             szArgc = argc;
 	        szArgv = argv;
-	        //Sys_Start(); //we don't wanna launch yet
+	        Sys_Start(); //we don't wanna launch yet
             
-            WHBLogPrintf("If we're here, game didn't load");
             displayed = true;
+            WHBLogPrintf("If we're here, game didn't load");
+            WHBLogConsoleDraw();
         }
     }
 
     WHBLogConsoleFree();
 
-    if (!wbhRunning)
-    {
-        WHBProcShutdown();
-        exit(0);
-    }
+    WHBProcShutdown();
+    return 0;
 }
 
 #endif // __WIIU__

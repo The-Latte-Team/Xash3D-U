@@ -14,10 +14,14 @@ GNU General Public License for more details.
 */
 
 #include "common.h"
-#include "library.h"
+#include "lib_common.h"
 #include "filesystem.h"
 #include "server.h"
 #include <ctype.h>
+
+#if XASH_WIIU
+#include "dll_cafe.h"
+#endif
 
 static char s_szLastError[1024] = "";
 

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "client.h"
-#include "library.h"
+#include "lib_common.h"
 #include "cl_tent.h"
 #include "platform/platform.h"
 #include "vid_common.h"

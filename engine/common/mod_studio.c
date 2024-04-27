@@ -17,7 +17,7 @@ GNU General Public License for more details.
 #include "server.h"
 #include "studio.h"
 #include "r_studioint.h"
-#include "library.h"
+#include "lib_common.h"
 #include "ref_common.h"
 
 typedef int (*STUDIOAPI)( int, sv_blending_interface_t**, server_studio_api_t*,  float (*transform)[3][4], float (*bones)[MAXSTUDIOBONES][3][4] );

@@ -38,7 +38,7 @@ extern fs_globals_t *FI;
 #define FS_AddGameHierarchy (*g_fsapi.AddGameHierarchy)
 #define FS_Search (*g_fsapi.Search)
 #define FS_SetCurrentDirectory (*g_fsapi.SetCurrentDirectory)
-#define FS_Path_f (*g_fsapi.Path_f)
+//#define FS_Path_f (*g_fsapi.Path_f)
 
 // gameinfo utils
 #define FS_LoadGameInfo (*g_fsapi.LoadGameInfo)

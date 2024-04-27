@@ -16,7 +16,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "server.h"
 #include "const.h"
-#include "library.h"
+#include "lib_common.h"
 #include "triangleapi.h"
 #include "ref_common.h"
 
