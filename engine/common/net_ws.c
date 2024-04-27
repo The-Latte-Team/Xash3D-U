@@ -12,20 +12,17 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
-#if !defined(__WIIU__)
-
 #include "common.h"
 #include "client.h" // ConnectionProgress
 #include "netchan.h"
 #include "xash3d_mathlib.h"
 #include "ipv6text.h"
-#include "net_ws.h"
 #if XASH_WIN32
 #include "platform/win32/net.h"
 #elif defined XASH_NO_NETWORK
 #include "platform/stub/net_stub.h"
 #else
-#include "platform/stub/net_stub.h"
+#include "platform/posix/net.h"
 #endif
 #if XASH_PSVITA
 #include "platform/psvita/net_psvita.h"
@@ -199,9 +196,7 @@ _inline socklen_t NET_SockAddrLen( const struct sockaddr_storage *addr )
 	switch ( addr->ss_family )
 	{
 	case AF_INET:
-		return sizeof( struct sockaddr_in );
-	case AF_INET:
-		return sizeof( struct sockaddr_in6 );
+		return sizeof(struct sockaddr_in6);
 	default:
 		return sizeof( *addr ); // what the fuck is this?
 	}
@@ -3035,5 +3030,3 @@ void HTTP_Shutdown( void )
 
 	http.last_server = NULL;
 }
-
-#endif

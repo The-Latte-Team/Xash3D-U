@@ -636,8 +636,9 @@ qboolean Sys_NewInstance( const char *gamedir )
 	exe[exelen] = 0;
 
 	Host_Shutdown();
-
+	#if !XASH_WIIU
 	execv( exe, newargs );
+	#endif
 #endif
 
 	// if execv returned, it's probably an error

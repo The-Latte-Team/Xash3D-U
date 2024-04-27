@@ -32,6 +32,7 @@ GNU General Public License for more details.
 #include <errno.h>
 #include "common.h"
 #include <net_ws.h>
+#include "net_ws.h"
 #include "base_cmd.h"
 #include "client.h"
 #include "server.h"

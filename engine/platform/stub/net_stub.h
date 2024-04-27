@@ -23,7 +23,7 @@ struct in_addr {unsigned long s_addr;};
 struct sockaddr_in{ short sin_family;unsigned short sin_port;struct in_addr sin_addr;};
 struct sockaddr {short sa_family;int stub[32];};
 struct hostent {int h_addr_list[1];};
-struct timeval {long tv_sec;long tv_usec;};
+//struct timeval {long tv_sec;long tv_usec;};
 
 #define AF_INET 0
 #define INADDR_BROADCAST 0
