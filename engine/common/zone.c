@@ -21,6 +21,17 @@ GNU General Public License for more details.
 #define MEMHEADER_SENTINEL1	0xDEADF00DU
 #define MEMHEADER_SENTINEL2	0xDFU
 
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
+#endif
+
 #ifdef XASH_CUSTOM_SWAP
 #include "swap.h"
 #define Q_malloc SWAP_Malloc
@@ -508,5 +519,5 @@ Memory_Init
 */
 void Memory_Init( void )
 {
-	poolchain = NULL; // init mem chain
+	poolchain = 0; // init mem chain
 }

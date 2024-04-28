@@ -21,6 +21,14 @@ GNU General Public License for more details.
 #include "platform.h"
 #if XASH_WIIU
 #include "dll_cafe.h"
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
 #endif
 
 fs_api_t g_fsapi;
@@ -89,10 +97,10 @@ qboolean FS_LoadProgs( void )
 	FSAPI GetFSAPI;
 
 	fs_hInstance = COM_LoadLibrary( name, false, true );
-
+	
 	if( !fs_hInstance )
 	{
-		Host_Error( "FS_LoadProgs: can't load filesystem library %s: %s\n", name, COM_GetLibraryError() );
+		//Host_Error( "FS_LoadProgs: can't load filesystem library %s: %s\n", name, COM_GetLibraryError() );
 		return false;
 	}
 
@@ -129,18 +137,28 @@ FS_Init
 */
 void FS_Init( void )
 {
-	string gamedir;
+	string gamedir = "wiiu/apps/xash3DU/valve";
 
-	Cmd_AddRestrictedCommand( "fs_rescan", FS_Rescan_f, "rescan filesystem search pathes" );
+	WHBLogPrintf("FS Init - 1");
+    WHBLogConsoleDraw();
+
+	/*Cmd_AddRestrictedCommand( "fs_rescan", FS_Rescan_f, "rescan filesystem search pathes" );
 	Cmd_AddRestrictedCommand( "fs_path", FS_Path_f_, "show filesystem search pathes" );
-	Cmd_AddRestrictedCommand( "fs_clearpaths", FS_ClearPaths_f, "clear filesystem search pathes" );
+	Cmd_AddRestrictedCommand( "fs_clearpaths", FS_ClearPaths_f, "clear filesystem search pathes" );*/
 
 	if( !Sys_GetParmFromCmdLine( "-game", gamedir ))
 		Q_strncpy( gamedir, SI.basedirName, sizeof( gamedir )); // gamedir == basedir
+	
+	WHBLogPrintf("FS Init - 3");
+    WHBLogConsoleDraw();
+	
+	#if XASH_WIIU
+	return;
+	#endif
 
 	if( !FS_InitStdio( true, host.rootdir, SI.basedirName, gamedir, host.rodir ))
 	{
-		Host_Error( "Can't init filesystem_stdio!\n" );
+		//Host_Error( "Can't init filesystem_stdio!\n" );
 		return;
 	}
 

@@ -30,8 +30,8 @@ GNU General Public License for more details.
 #include <emscripten/emscripten.h>
 #endif
 #include <errno.h>
+#include "fscallback.h"
 #include "common.h"
-#include <net_ws.h>
 #include "net_ws.h"
 #include "base_cmd.h"
 #include "client.h"
@@ -44,6 +44,17 @@ GNU General Public License for more details.
 #include "enginefeatures.h"
 #include "render_api.h"	// decallist_t
 #include "tests.h"
+
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
+#endif
 
 pfnChangeGame	pChangeGame = NULL;
 host_parm_t		host;	// host parms
@@ -373,36 +384,7 @@ Change game modification
 */
 static void Host_ChangeGame_f( void )
 {
-	int	i;
-
-	if( Cmd_Argc() != 2 )
-	{
-		Con_Printf( S_USAGE "game <directory>\n" );
-		return;
-	}
-
-	// validate gamedir
-	for( i = 0; i < FI->numgames; i++ )
-	{
-		if( !Q_stricmp( FI->games[i]->gamefolder, Cmd_Argv( 1 )))
-			break;
-	}
-
-	if( i == FI->numgames )
-	{
-		Con_Printf( "%s not exist\n", Cmd_Argv( 1 ));
-	}
-	else if( !Q_stricmp( GI->gamefolder, Cmd_Argv( 1 )))
-	{
-		Con_Printf( "%s already active\n", Cmd_Argv( 1 ));
-	}
-	else
-	{
-		char finalmsg[MAX_VA_STRING];
-
-		Q_snprintf( finalmsg, sizeof( finalmsg ), "change game to '%s'", FI->games[i]->title );
-		Host_NewInstance( Cmd_Argv( 1 ), finalmsg );
-	}
+	return;
 }
 
 /*
@@ -412,83 +394,7 @@ Host_Exec_f
 */
 static void Host_Exec_f( void )
 {
-	string cfgpath;
-	byte *f;
-	char *txt;
-	fs_offset_t	len;
-	const char *arg;
-
-	if( Cmd_Argc() != 2 )
-	{
-		Con_Printf( S_USAGE "exec <filename>\n" );
-		return;
-	}
-
-	arg = Cmd_Argv( 1 );
-
-#ifndef XASH_DEDICATED
-	if( !Cmd_CurrentCommandIsPrivileged() )
-	{
-		const char *unprivilegedWhitelist[] =
-		{
-			NULL, "mapdefault.cfg", "scout.cfg", "sniper.cfg",
-			"soldier.cfg", "demoman.cfg", "medic.cfg", "hwguy.cfg",
-			"pyro.cfg", "spy.cfg", "engineer.cfg", "civilian.cfg"
-		};
-		int i;
-		char temp[MAX_VA_STRING];
-		qboolean allow = false;
-
-		Q_snprintf( temp, sizeof( temp ), "%s.cfg", clgame.mapname );
-		unprivilegedWhitelist[0] = temp;
-
-		for( i = 0; i < ARRAYSIZE( unprivilegedWhitelist ); i++ )
-		{
-			if( !Q_strcmp( arg, unprivilegedWhitelist[i] ))
-			{
-				allow = true;
-				break;
-			}
-		}
-
-		if( !allow )
-		{
-			Con_Printf( "exec %s: not privileged or in whitelist\n", arg );
-			return;
-		}
-	}
-#endif // XASH_DEDICATED
-
-	if( !Q_stricmp( "game.cfg", arg ))
-	{
-		// don't execute game.cfg in singleplayer
-		if( SV_GetMaxClients() == 1 )
-			return;
-	}
-
-	Q_strncpy( cfgpath, arg, sizeof( cfgpath ));
-	COM_DefaultExtension( cfgpath, ".cfg", sizeof( cfgpath )); // append as default
-
-	f = FS_LoadFile( cfgpath, &len, false );
-	if( !f )
-	{
-		Con_Reportf( "couldn't exec %s\n", Cmd_Argv( 1 ));
-		return;
-	}
-
-	if( !Q_stricmp( "config.cfg", arg ))
-		host.config_executed = true;
-
-	// adds \n\0 at end of the file
-	txt = Z_Calloc( len + 2 );
-	memcpy( txt, f, len );
-	Q_strncat( txt, "\n", len + 2 );
-	Mem_Free( f );
-
-	if( !host.apply_game_config )
-		Con_Printf( "execing %s\n", arg );
-	Cbuf_InsertText( txt );
-	Mem_Free( txt );
+	return;
 }
 
 /*
@@ -1177,16 +1083,27 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 		Sys_Error( "Changing working directory failed (empty working directory)\n" );
 		return;
 	}
+	WHBLogPrintf("InitCommon - 7");
+    WHBLogConsoleDraw();
 
 	FS_LoadProgs();
 
+	WHBLogPrintf("InitCommon - 8");
+    WHBLogConsoleDraw();
+
 	// TODO: this function will cause engine to stop in case of fail
 	// when it will have an option to return string error, restore Sys_Error
-	FS_SetCurrentDirectory( host.rootdir );
+	//FS_SetCurrentDirectory( host.rootdir );
 
 	FS_Init();
 
+	WHBLogPrintf("InitCommon - 9");
+    WHBLogConsoleDraw();
+
 	Sys_InitLog();
+
+	WHBLogPrintf("InitCommon - 10");
+    WHBLogConsoleDraw();
 
 	// print bugcompatibility level here, after log was initialized
 	if( host.bugcomp == BUGCOMP_GOLDSRC )
@@ -1199,42 +1116,45 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 		Con_Printf( "Developer level: ^3%i\n", developer );
 	}
 
-	Cmd_AddCommand( "exec", Host_Exec_f, "execute a script file" );
+	/*Cmd_AddCommand( "exec", Host_Exec_f, "execute a script file" );
 	Cmd_AddCommand( "memlist", Host_MemStats_f, "prints memory pool information" );
-	Cmd_AddRestrictedCommand( "userconfigd", Host_Userconfigd_f, "execute all scripts from userconfig.d" );
+	Cmd_AddRestrictedCommand( "userconfigd", Host_Userconfigd_f, "execute all scripts from userconfig.d" );*/
+
+	WHBLogPrintf("InitCommon - 11");
+    WHBLogConsoleDraw();
 
 	Image_Init();
 	Sound_Init();
+
+	WHBLogPrintf("InitCommon - 12");
+    WHBLogConsoleDraw();
 
 #if XASH_ENGINE_TESTS
 	if( Sys_CheckParm( "-runtests" ))
 		Host_RunTests( 1 );
 #endif
 
-	FS_LoadGameInfo( NULL );
+	//FS_LoadGameInfo( NULL );
 	Cvar_PostFSInit();
+	
+	WHBLogPrintf("InitCommon - 13.1");
+    WHBLogConsoleDraw();
 
-	Q_strncpy( host.gamefolder, GI->gamefolder, sizeof( host.gamefolder ));
+	Q_strncpy( host.rootdir, "sd:/wiiu/apps/xash3DU/valve", sizeof( host.rootdir ));
+	
+	WHBLogPrintf("InitCommon - 13.2");
+    WHBLogConsoleDraw();
 
-	for( i = 0; i < 3; i++ )
-	{
-		const char *rcName;
-		switch( i )
-		{
-		case 0: rcName = SI.basedirName; break; // e.g. valve.rc
-		case 1: rcName = SI.exeName; break;     // e.g. quake.rc
-		case 2: rcName = host.gamefolder; break; // e.g. game.rc (ran from default launcher)
-		}
+	Q_strncpy( "valve.rc", SI.basedirName, sizeof( "valve.rc" ));
 
-		if( FS_FileExists( va( "%s.rc", rcName ), false ))
-		{
-			Q_strncpy( SI.rcName, rcName, sizeof( SI.rcName ));
-			break;
-		}
-	}
+	WHBLogPrintf("InitCommon - 14");
+    WHBLogConsoleDraw();
 
 	Image_CheckPaletteQ1 ();
 	Host_InitDecals ();	// reload decals
+
+	WHBLogPrintf("InitCommon - 15");
+    WHBLogConsoleDraw();
 
 	// DEPRECATED: by FWGS fork
 #if 0
@@ -1251,6 +1171,9 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 
 	IN_Init();
 	Key_Init();
+
+	WHBLogPrintf("InitCommon - 16");
+    WHBLogConsoleDraw();
 }
 
 static void Host_FreeCommon( void )
@@ -1269,14 +1192,26 @@ Host_Main
 */
 int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGame, pfnChangeGame func )
 {
+	WHBLogPrintf("U get stuck here? Prob not");
+    WHBLogConsoleDraw();
+
 	static double	oldtime, newtime;
 	string demoname;
 
 	host.starttime = Sys_DoubleTime();
 
+	WHBLogPrintf("Maybe here?");
+    WHBLogConsoleDraw();
+
 	pChangeGame = func;	// may be NULL
 
+	WHBLogPrintf("0");
+    WHBLogConsoleDraw();
+
 	Host_InitCommon( argc, argv, progname, bChangeGame );
+
+	WHBLogPrintf("1");
+    WHBLogConsoleDraw();
 
 	// init commands and vars
 	if( host_developer.value >= DEV_EXTENDED )
@@ -1285,6 +1220,9 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 		Cmd_AddRestrictedCommand ( "host_error", Host_Error_f, "just throw a host error to test shutdown procedures");
 		Cmd_AddRestrictedCommand ( "crash", Host_Crash_f, "a way to force a bus error for development reasons");
 	}
+	
+	WHBLogPrintf("2");
+    WHBLogConsoleDraw();
 
 	Cvar_RegisterVariable( &host_serverstate );
 	Cvar_RegisterVariable( &host_maxfps );
@@ -1296,16 +1234,25 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 	Cvar_RegisterVariable( &host_limitlocal );
 	Cvar_RegisterVariable( &con_gamemaps );
 	Cvar_RegisterVariable( &sys_timescale );
+	
+	WHBLogPrintf("3");
+    WHBLogConsoleDraw();
 
 	Cvar_Getf( "buildnum", FCVAR_READ_ONLY, "returns a current build number", "%i", Q_buildnum_compat());
 	Cvar_Getf( "ver", FCVAR_READ_ONLY, "shows an engine version", "%i/%s (hw build %i)", PROTOCOL_VERSION, XASH_COMPAT_VERSION, Q_buildnum_compat());
 	Cvar_Getf( "host_ver", FCVAR_READ_ONLY, "detailed info about this build", "%i " XASH_VERSION " %s %s %s", Q_buildnum(), Q_buildos(), Q_buildarch(), Q_buildcommit());
 	Cvar_Getf( "host_lowmemorymode", FCVAR_READ_ONLY, "indicates if engine compiled for low RAM consumption (0 - normal, 1 - low engine limits, 2 - low protocol limits)", "%i", XASH_LOW_MEMORY );
 
+	WHBLogPrintf("4");
+    WHBLogConsoleDraw();
+
 	Mod_Init();
 	NET_Init();
 	NET_InitMasters();
 	Netchan_Init();
+	
+	WHBLogPrintf("5");
+    WHBLogConsoleDraw();
 
 	// allow to change game from the console
 	if( pChangeGame != NULL )
@@ -1317,15 +1264,24 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 	{
 		Cvar_Get( "host_allow_changegame", "0", FCVAR_READ_ONLY, "allows to change games" );
 	}
+	
+	WHBLogPrintf("6");
+    WHBLogConsoleDraw();
 
 	SV_Init();
 	CL_Init();
 
+	WHBLogPrintf("7");
+    WHBLogConsoleDraw();
+
 	HTTP_Init();
 	ID_Init();
 	SoundList_Init();
+	
+	WHBLogPrintf("8");
+    WHBLogConsoleDraw();
 
-	if( Host_IsDedicated() )
+	/*if( Host_IsDedicated() )
 	{
 #ifdef _WIN32
 		Wcon_InitConsoleCommands ();
@@ -1334,7 +1290,7 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 		Cmd_AddRestrictedCommand( "quit", Sys_Quit, "quit the game" );
 		Cmd_AddRestrictedCommand( "exit", Sys_Quit, "quit the game" );
 	}
-	else Cmd_AddRestrictedCommand( "minimize", Host_Minimize_f, "minimize main window to tray" );
+	else Cmd_AddRestrictedCommand( "minimize", Host_Minimize_f, "minimize main window to tray" );*/
 
 	HPAK_CheckIntegrity( CUSTOM_RES_PATH );
 

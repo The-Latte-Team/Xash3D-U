@@ -1271,6 +1271,7 @@ Cvar_PostFSInit
 */
 void Cvar_PostFSInit( void )
 {
+	#if !XASH_WIIU
 	int i;
 
 	for( i = 0; i < ARRAYSIZE( cvar_filter_quirks ); i++ )
@@ -1281,6 +1282,7 @@ void Cvar_PostFSInit( void )
 			break;
 		}
 	}
+	#endif
 }
 
 #if XASH_ENGINE_TESTS
