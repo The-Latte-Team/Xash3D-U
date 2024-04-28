@@ -45,6 +45,15 @@ GNU General Public License for more details.
 #include "common/protocol.h"
 #if XASH_WIIU
 #include "dll_cafe.h"
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
+#include <whb/sdcard.h>
 #endif
 
 #define FILE_COPY_SIZE		(1024 * 1024)
@@ -1511,7 +1520,7 @@ qboolean FS_InitStdio( qboolean unused_set_to_true, const char *rootdir, const c
 
 	// validate directories
 	stringlistinit( &dirs );
-	listdirectory( &dirs, "sd:/wiiu/apps/xash3DU" );
+	listdirectory( &dirs, "vol/external01/wiiu/apps/xash3DU" );
 	stringlistsort( &dirs );
 
 	for( i = 0; i < dirs.numstrings; i++ )
@@ -2443,6 +2452,9 @@ static byte *FS_LoadFile_( const char *path, fs_offset_t *filesizeptr, const qbo
 	int pack_ind;
 	void *( *pfnAlloc )( size_t ) = custom_alloc ? FS_CustomAlloc : malloc;
 	void ( *pfnFree )( void * ) = custom_alloc ? FS_CustomFree : free;
+
+	WHBLogPrintf("it no load");
+    WHBLogConsoleDraw();
 
 	// some mappers used leading '/' or '\' in path to models or sounds
 	if( path[0] == '/' || path[0] == '\\' )

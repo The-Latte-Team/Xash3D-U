@@ -17,17 +17,6 @@ GNU General Public License for more details.
 #include "xash3d_mathlib.h"
 #include "mod_local.h"
 
-#if XASH_WIIU
-#include <vpad/input.h>
-#include <coreinit/screen.h>
-#include <coreinit/cache.h>
-#include <whb/proc.h>
-#include <whb/log_console.h>
-#include <whb/log.h>
-#include <coreinit/thread.h>
-#include <coreinit/time.h>
-#endif
-
 #define LERPBYTE( i )	r = resamplerow1[i]; out[i] = (byte)(((( resamplerow2[i] - r ) * lerp)>>16 ) + r )
 #define FILTER_SIZE		5
 
@@ -382,20 +371,11 @@ void Image_CopyPalette32bit( void )
 
 void Image_CheckPaletteQ1( void )
 {
-	WHBLogPrintf("Do you crash here?");
-    WHBLogConsoleDraw();
-
 	rgbdata_t	*pic = FS_LoadImage( DEFAULT_INTERNAL_PALETTE, NULL, 0 );
-
-	WHBLogPrintf("Check palette - 1");
-    WHBLogConsoleDraw();
 
 	if( pic && pic->size == 1024 )
 	{
 		Image_ConvertPalTo24bit( pic );
-
-		WHBLogPrintf("Check palette - 2");
-    	WHBLogConsoleDraw();
 
 		if( Image_ComparePalette( pic->palette ) == PAL_CUSTOM )
 		{
@@ -409,9 +389,6 @@ void Image_CheckPaletteQ1( void )
 	}
 
 	if( pic ) FS_FreeImage( pic );
-
-	WHBLogPrintf("end Image");
-    WHBLogConsoleDraw();
 }
 
 void Image_GetPaletteQ1( void )

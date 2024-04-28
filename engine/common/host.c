@@ -497,24 +497,35 @@ static void Host_InitDecals( void )
 {
 	int	i, num_decals = 0;
 	search_t	*t;
+	
+	WHBLogPrintf("istg");
+    WHBLogConsoleDraw();
+	//Sys_Quit();
 
 	// NOTE: only once resource without which engine can't continue work
-	if( !FS_FileExists( "gfx/conchars", false ))
-		Sys_Error( "W_LoadWadFile: couldn't load gfx.wad\n" );
+	/*if( !FS_FileExists( "/vol/external01/wiiu/apps/xash3DU/valve/gfx/conchars", false ))
+		Sys_Quit();*/
 
 	memset( host.draw_decals, 0, sizeof( host.draw_decals ));
 
 	// lookup all the decals in decals.wad (basedir, gamedir, falldir)
-	t = FS_Search( "decals.wad/*.*", true, false );
+	t = FS_Search( "/vol/external01/wiiu/apps/xash3DU/valve/decals.wad/*.*", true, false );
+	WHBLogPrintf("get");
+    WHBLogConsoleDraw();
 
 	for( i = 0; t && i < t->numfilenames; i++ )
 	{
 		if( !Host_RegisterDecal( t->filenames[i], &num_decals ))
 			break;
 	}
+	WHBLogPrintf("real");
+    WHBLogConsoleDraw();
 
 	if( t ) Mem_Free( t );
 	Con_Reportf( "InitDecals: %i decals\n", num_decals );
+
+	WHBLogPrintf("bitch ");
+    WHBLogConsoleDraw();
 }
 
 /*
@@ -1023,7 +1034,7 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 			host.rootdir[0] = 0;
 		}
 #elif XASH_WIIU
-		Q_strncpy( host.rootdir, "sd:/wiiu/apps/xash3DU", sizeof(host.rootdir) );
+		Q_strncpy( host.rootdir, "vol/external01/wiiu/apps/xash3DU", sizeof(host.rootdir) );
 #elif (XASH_SDL == 2) && !XASH_NSWITCH && !XASH_WIIU // GetBasePath not impl'd in switch-sdl2
 		char *szBasePath = SDL_GetBasePath();
 		if( szBasePath )
@@ -1083,13 +1094,7 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 		Sys_Error( "Changing working directory failed (empty working directory)\n" );
 		return;
 	}
-	WHBLogPrintf("InitCommon - 7");
-    WHBLogConsoleDraw();
-
 	FS_LoadProgs();
-
-	WHBLogPrintf("InitCommon - 8");
-    WHBLogConsoleDraw();
 
 	// TODO: this function will cause engine to stop in case of fail
 	// when it will have an option to return string error, restore Sys_Error
@@ -1097,13 +1102,7 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 
 	FS_Init();
 
-	WHBLogPrintf("InitCommon - 9");
-    WHBLogConsoleDraw();
-
 	Sys_InitLog();
-
-	WHBLogPrintf("InitCommon - 10");
-    WHBLogConsoleDraw();
 
 	// print bugcompatibility level here, after log was initialized
 	if( host.bugcomp == BUGCOMP_GOLDSRC )
@@ -1120,14 +1119,8 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 	Cmd_AddCommand( "memlist", Host_MemStats_f, "prints memory pool information" );
 	Cmd_AddRestrictedCommand( "userconfigd", Host_Userconfigd_f, "execute all scripts from userconfig.d" );*/
 
-	WHBLogPrintf("InitCommon - 11");
-    WHBLogConsoleDraw();
-
 	Image_Init();
 	Sound_Init();
-
-	WHBLogPrintf("InitCommon - 12");
-    WHBLogConsoleDraw();
 
 #if XASH_ENGINE_TESTS
 	if( Sys_CheckParm( "-runtests" ))
@@ -1136,19 +1129,10 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 
 	//FS_LoadGameInfo( NULL );
 	Cvar_PostFSInit();
-	
-	WHBLogPrintf("InitCommon - 13.1");
-    WHBLogConsoleDraw();
 
-	Q_strncpy( host.rootdir, "sd:/wiiu/apps/xash3DU/valve", sizeof( host.rootdir ));
-	
-	WHBLogPrintf("InitCommon - 13.2");
-    WHBLogConsoleDraw();
+	Q_strncpy( host.rootdir, "vol/external01/wiiu/apps/xash3DU/valve", sizeof( host.rootdir ));
 
 	Q_strncpy( "valve.rc", SI.basedirName, sizeof( "valve.rc" ));
-
-	WHBLogPrintf("InitCommon - 14");
-    WHBLogConsoleDraw();
 
 	Image_CheckPaletteQ1 ();
 	Host_InitDecals ();	// reload decals
@@ -1192,21 +1176,12 @@ Host_Main
 */
 int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGame, pfnChangeGame func )
 {
-	WHBLogPrintf("U get stuck here? Prob not");
-    WHBLogConsoleDraw();
-
 	static double	oldtime, newtime;
 	string demoname;
 
 	host.starttime = Sys_DoubleTime();
 
-	WHBLogPrintf("Maybe here?");
-    WHBLogConsoleDraw();
-
 	pChangeGame = func;	// may be NULL
-
-	WHBLogPrintf("0");
-    WHBLogConsoleDraw();
 
 	Host_InitCommon( argc, argv, progname, bChangeGame );
 
@@ -1368,6 +1343,11 @@ Host_Shutdown
 */
 void EXPORT Host_Shutdown( void )
 {
+#if XASH_WIIU
+	WHBLogPrintf("trying to shutdown?");
+    WHBLogConsoleDraw();
+	Platform_Shutdown();
+#else
 	qboolean error = host.status == HOST_ERR_FATAL;
 
 	if( host.shutdown_issued ) return;
@@ -1399,4 +1379,5 @@ void EXPORT Host_Shutdown( void )
 	// restore filter
 	Sys_RestoreCrashHandler();
 	Sys_CloseLog();
+#endif
 }

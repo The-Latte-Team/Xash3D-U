@@ -78,6 +78,10 @@ void NSwitch_Init( void );
 void NSwitch_Shutdown( void );
 #endif
 
+#if XASH_WIIU
+void Cafe_Shutdown( void );
+#endif
+
 #if XASH_PSVITA
 void PSVita_Init( void );
 void PSVita_Shutdown( void );
@@ -135,6 +139,8 @@ static inline void Platform_Shutdown( void )
 	Wcon_DestroyConsole( );
 #elif XASH_LINUX
 	Linux_Shutdown( );
+#elif XASH_WIIU
+	Cafe_Shutdown( );
 #endif
 
 #if XASH_SDL

@@ -30,6 +30,7 @@ GNU General Public License for more details.
 #include <whb/log.h>
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
+#include <whb/sdcard.h>
 
 #define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
 
@@ -76,7 +77,6 @@ static int Sys_Start( void )
 
     WHBLogPrintf("Launching game...");
     WHBLogConsoleDraw();
-    OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	return Host_Main( szArgc, szArgv, game, 0, Sys_ChangeGame );
 }
@@ -141,10 +141,12 @@ int main(int argc, char **argv)
         if (vpad_fatal) break;
 
         if(valveFolderAvailable && !displayed){
+            WHBMountSdCard();
+            
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
 
-            OSSleepTicks(OSMillisecondsToTicks(4000)); //Wait before game launches
+            OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
             //Launch the game
             glw_state.software = true; //force it to be always software
             szArgc = argc;

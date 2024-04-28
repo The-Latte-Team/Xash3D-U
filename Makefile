@@ -13,7 +13,7 @@ TOPDIR ?= $(CURDIR)
 # APP_SHORTNAME sets the short name of the application
 # APP_AUTHOR sets the author of the application
 #-------------------------------------------------------------------------------
-APP_NAME		:= Xash3D U
+APP_NAME		:= Half-Life 1
 APP_SHORTNAME	:= HL1
 APP_AUTHOR		:= The Latte Team
 

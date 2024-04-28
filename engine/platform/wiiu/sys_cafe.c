@@ -20,8 +20,23 @@ GNU General Public License for more details.
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <SDL.h>
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
 
 void Platform_ShellExecute( const char *path, const char *parms )
 {
 	Con_Reportf( S_WARN "Tried to shell execute ;%s; -- not supported\n", path );
+}
+
+void Cafe_Shutdown( void )
+{
+	WHBLogConsoleFree();
+    WHBProcShutdown();
+	return;
 }

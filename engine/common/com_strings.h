@@ -51,7 +51,7 @@ GNU General Public License for more details.
 // debug beams
 #define DEFAULT_LASERBEAM_PATH	"sprites/laserbeam.spr"
 
-#define DEFAULT_INTERNAL_PALETTE	"sd:/wiiu/apps/xash3DU/valve/gfx/palette.lmp"
+#define DEFAULT_INTERNAL_PALETTE	"gfx/palette.lmp"
 
 #define DEFAULT_EXTERNAL_PALETTE	"gfx/palette.pal"
 
