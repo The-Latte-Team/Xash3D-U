@@ -21,6 +21,7 @@ GNU General Public License for more details.
 #include <stdlib.h>
 #include <malloc.h>
 #include <dirent.h>
+#include <unistd.h>
 
 #include <vpad/input.h>
 #include <coreinit/screen.h>
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        WHBLogConsoleSetColor(0xAB3531);
+        WHBLogConsoleSetColor(0x993333FF);
         WHBLogPrintf("No Valve folder found!");
         WHBLogPrintf("Put your Valve folder files in: sd:/" HOMEBREW_APP_PATH "/valve");
         valveFolderAvailable = false;
@@ -141,7 +142,12 @@ int main(int argc, char **argv)
         if (vpad_fatal) break;
 
         if(valveFolderAvailable && !displayed){
-            WHBMountSdCard();
+            if (!WHBMountSdCard())
+		        return;
+            const char *sd_path = WHBGetSdCardMountPath();
+            if (sd_path == NULL)
+                return;
+            chdir(sd_path);
             
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
@@ -156,11 +162,12 @@ int main(int argc, char **argv)
             displayed = true;
             WHBLogPrintf("If we're here, game didn't load");
             WHBLogConsoleDraw();
+            break;
         }
     }
 
     WHBLogConsoleFree();
-
+    WHBUnmountSdCard();
     WHBProcShutdown();
     return 0;
 }

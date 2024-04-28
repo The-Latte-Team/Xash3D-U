@@ -30,7 +30,6 @@ GNU General Public License for more details.
 #include <emscripten/emscripten.h>
 #endif
 #include <errno.h>
-#include "fscallback.h"
 #include "common.h"
 #include "net_ws.h"
 #include "base_cmd.h"
@@ -44,6 +43,8 @@ GNU General Public License for more details.
 #include "enginefeatures.h"
 #include "render_api.h"	// decallist_t
 #include "tests.h"
+
+#include "fscallback.h"
 
 #if XASH_WIIU
 #include <vpad/input.h>
@@ -500,18 +501,16 @@ static void Host_InitDecals( void )
 	
 	WHBLogPrintf("istg");
     WHBLogConsoleDraw();
-	//Sys_Quit();
 
 	// NOTE: only once resource without which engine can't continue work
-	/*if( !FS_FileExists( "/vol/external01/wiiu/apps/xash3DU/valve/gfx/conchars", false ))
-		Sys_Quit();*/
+	if( !FS_FileExists( "gfx/conchars", false )){
+		Sys_Quit();
+	}
 
 	memset( host.draw_decals, 0, sizeof( host.draw_decals ));
 
 	// lookup all the decals in decals.wad (basedir, gamedir, falldir)
-	t = FS_Search( "/vol/external01/wiiu/apps/xash3DU/valve/decals.wad/*.*", true, false );
-	WHBLogPrintf("get");
-    WHBLogConsoleDraw();
+	t = FS_Search( "decals.wad/*.*", true, false );
 
 	for( i = 0; t && i < t->numfilenames; i++ )
 	{
@@ -524,7 +523,7 @@ static void Host_InitDecals( void )
 	if( t ) Mem_Free( t );
 	Con_Reportf( "InitDecals: %i decals\n", num_decals );
 
-	WHBLogPrintf("bitch ");
+	WHBLogPrintf("bitch");
     WHBLogConsoleDraw();
 }
 

@@ -31,6 +31,8 @@ GNU General Public License for more details.
 // global image variables
 imglib_t	image;
 
+char *sdPath;
+
 typedef struct suffix_s
 {
 	const char	*suf;
@@ -234,6 +236,9 @@ static const loadpixformat_t *Image_GetLoadFormatForExtension( const char *ext )
 
 static qboolean Image_ProbeLoadBuffer_( const loadpixformat_t *fmt, const char *name, const byte *buf, size_t size, int override_hint )
 {
+	WHBLogPrintf("is it cuz of this?");
+    WHBLogConsoleDraw();
+
 	if( override_hint > 0 )
 		image.hint = override_hint;
 	else image.hint = fmt->hint;
@@ -243,8 +248,13 @@ static qboolean Image_ProbeLoadBuffer_( const loadpixformat_t *fmt, const char *
 
 static qboolean Image_ProbeLoadBuffer( const loadpixformat_t *fmt, const char *name, const byte *buf, size_t size, int override_hint )
 {
+	WHBLogPrintf("woah, new function to look at");
+    WHBLogConsoleDraw();
 	if( size <= 0 )
 		return false;
+
+	WHBLogPrintf("obvious");
+    WHBLogConsoleDraw();
 
 	// bruteforce all loaders
 	if( !fmt )
@@ -276,22 +286,38 @@ void prepend(char* s, const char* t)
 static qboolean Image_ProbeLoad_( const loadpixformat_t *fmt, const char *name, const char *suffix, int override_hint )
 {
 	qboolean success = false;
-	fs_offset_t filesize;
+	size_t filesize;
 	string path;
 	byte *f;
+	FILE *fptr;
 
 	Q_snprintf( path, sizeof( path ), fmt->formatstring, name, suffix, fmt->ext );
-
-	prepend(path, "/vol/external01/wiiu/apps/xash3DU/valve/");
+	prepend(path, sdPath);
 
 	//f = FS_LoadFile( path, &filesize, false );
+	WHBLogPrintf(path);
+    WHBLogConsoleDraw();
 
-	if( f )
+	if( fptr = fopen( path, "rb" ) != NULL )
 	{
+		f = fptr;
+		WHBLogPrintf("now?");
+    	WHBLogConsoleDraw();
+
+		fseek(fptr, 0L, SEEK_END);
+		/*long int res = ftell(fptr);
+		filesize = res;*/
+		
+		WHBLogPrintf("what?");
+    	WHBLogConsoleDraw();
+
 		success = Image_ProbeLoadBuffer( fmt, path, f, filesize, override_hint );
 
-		Mem_Free( f );
+		WHBLogPrintf("idiots");
+    	WHBLogConsoleDraw();
+		Mem_Free( fptr );
 	}
+	fclose(fptr);
 
 	return success;
 }
@@ -339,6 +365,9 @@ rgbdata_t *FS_LoadImage( const char *filename, const byte *buffer, size_t size )
 	// special mode: skip any checks, load file from buffer
 	if( filename[0] == '#' && buffer && size )
 		goto load_internal;
+
+	sdPath = WHBGetSdCardMountPath();
+	strcat(sdPath, "/wiiu/apps/xash3DU/valve/");
 
 	if( Image_ProbeLoad( extfmt, loadname, "", -1 ))
 		return ImagePack();

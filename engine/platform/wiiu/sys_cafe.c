@@ -36,7 +36,11 @@ void Platform_ShellExecute( const char *path, const char *parms )
 
 void Cafe_Shutdown( void )
 {
+	WHBProcStopRunning();
+	ProcUIShutdown();
+	
 	WHBLogConsoleFree();
     WHBProcShutdown();
+	WHBUnmountSdCard();
 	return;
 }
