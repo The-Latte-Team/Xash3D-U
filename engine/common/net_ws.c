@@ -21,6 +21,7 @@ GNU General Public License for more details.
 #include "platform/win32/net.h"
 #elif defined XASH_NO_NETWORK
 #include "platform/stub/net_stub.h"
+#include <errno.h>
 #else
 #include "platform/posix/net.h"
 #endif
