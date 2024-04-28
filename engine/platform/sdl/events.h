@@ -27,6 +27,7 @@ void      VID_DestroyWindow( void );
 void GL_InitExtensions( void );
 qboolean GL_DeleteContext( void );
 void VID_SaveWindowSize( int width, int height, qboolean maximized );
+void Platform_RunEvents( void );
 
 // joystick events
 extern SDL_Joystick *g_joy;

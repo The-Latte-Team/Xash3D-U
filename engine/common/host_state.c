@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 #include "common.h"
 #include "platform/platform.h"
+#include "events.h"
 
 void COM_InitHostState( void )
 {
@@ -141,7 +142,7 @@ static void Host_RunFrame( float time )
 {
 	// at this time, we don't need to get events from OS on dedicated
 #if !XASH_DEDICATED
-	Platform_RunEvents();
+//	Platform_RunEvents();
 #endif // XASH_DEDICATED
 
 	// engine main frame

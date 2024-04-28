@@ -23,7 +23,12 @@ GNU General Public License for more details.
 #include "platform/stub/net_stub.h"
 #include <errno.h>
 #else
+#include "netinet/in.h"
 #include "platform/posix/net.h"
+#include "sys/types.h"
+#include "sys/socket.h"
+#include "sys/select.h"
+#include "arpa/inet.h"
 #endif
 #if XASH_PSVITA
 #include "platform/psvita/net_psvita.h"
@@ -197,7 +202,7 @@ _inline socklen_t NET_SockAddrLen( const struct sockaddr_storage *addr )
 	switch ( addr->ss_family )
 	{
 	case AF_INET:
-		return sizeof(struct sockaddr_in6);
+		return sizeof( *addr );
 	default:
 		return sizeof( *addr ); // what the fuck is this?
 	}
@@ -257,8 +262,9 @@ static void NET_NetadrToSockadr( netadr_t *a, struct sockaddr_storage *s )
 		((struct sockaddr_in *)s)->sin_port = a->port;
 		((struct sockaddr_in *)s)->sin_addr.s_addr = a->ip4;
 	}
+	#if !XASH_WIIU
 	else if( a->type6 == NA_IP6 )
-	{
+	{	
 		struct in6_addr ip6;
 
 		NET_NetadrToIP6Bytes( ip6.s6_addr, a );
@@ -282,6 +288,7 @@ static void NET_NetadrToSockadr( netadr_t *a, struct sockaddr_storage *s )
 		memcpy(((struct sockaddr_in6 *)s)->sin6_addr.s6_addr, k_ipv6Bytes_LinkLocalAllNodes, sizeof( struct in6_addr ));
 		((struct sockaddr_in6 *)s)->sin6_port = a->port;
 	}
+	#endif
 }
 
 /*
@@ -297,6 +304,7 @@ static void NET_SockadrToNetadr( const struct sockaddr_storage *s, netadr_t *a )
 		a->ip4 = ((struct sockaddr_in *)s)->sin_addr.s_addr;
 		a->port = ((struct sockaddr_in *)s)->sin_port;
 	}
+	#if !XASH_WIIU
 	else if( s->ss_family == AF_INET )
 	{
 		NET_IP6BytesToNetadr( a, ((struct sockaddr_in6 *)s)->sin6_addr.s6_addr );
@@ -308,6 +316,7 @@ static void NET_SockadrToNetadr( const struct sockaddr_storage *s, netadr_t *a )
 
 		a->port = ((struct sockaddr_in6 *)s)->sin6_port;
 	}
+	#endif
 }
 
 /*
@@ -474,6 +483,7 @@ static net_gai_state_t NET_StringToSockaddr( const char *s, struct sockaddr_stor
 	memset( sadr, 0, sizeof( *sadr ));
 
 	// try to parse it as IPv6 first
+	#if !XASH_WIIU
 	if(( family == AF_UNSPEC || family == AF_INET ) && ParseIPv6Addr( s, ip6, &port, NULL ))
 	{
 		((struct sockaddr_in6 *)sadr)->sin6_family = AF_INET;
@@ -482,7 +492,7 @@ static net_gai_state_t NET_StringToSockaddr( const char *s, struct sockaddr_stor
 
 		return NET_EAI_OK;
 	}
-
+	#endif
 	Q_strncpy( copy, s, sizeof( copy ));
 
 	// strip off a trailing :port if present
@@ -572,12 +582,14 @@ static net_gai_state_t NET_StringToSockaddr( const char *s, struct sockaddr_stor
 			((struct sockaddr_in *)sadr)->sin_addr =
 				((struct sockaddr_in*)&temp)->sin_addr;
 		}
+		#if !XASH_WIIU
 		else if( temp.ss_family == AF_INET )
 		{
 			memcpy(&((struct sockaddr_in6 *)sadr)->sin6_addr,
 				&((struct sockaddr_in6*)&temp)->sin6_addr,
 				sizeof( struct in6_addr ));
 		}
+		#endif
 	}
 
 	return NET_EAI_OK;
@@ -1681,7 +1693,7 @@ static int NET_IPSocket( const char *net_iface, int port, int family )
 	int pfamily = PF_INET;
 
 	if( family == AF_INET )
-		pfamily = PF_INET6;
+		pfamily = PF_INET;
 
 	if( NET_IsSocketError(( net_socket = socket( pfamily, SOCK_DGRAM, IPPROTO_UDP ))))
 	{
@@ -1697,8 +1709,10 @@ static int NET_IPSocket( const char *net_iface, int port, int family )
 
 		Con_DPrintf( S_WARN "NET_UDPSocket: port: %d ioctl FIONBIO: %s\n", port, NET_ErrorString( ));
 		// try timeout instead of NBIO
+		#if !XASH_WIIU
 		timeout.tv_sec = timeout.tv_usec = 0;
 		setsockopt( net_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
+		#endif
 	}
 
 	// make it broadcast capable
@@ -1716,6 +1730,7 @@ static int NET_IPSocket( const char *net_iface, int port, int family )
 
 	addr.ss_family = family;
 
+	#if !XASH_WIIU
 	if( family == AF_INET )
 	{
 		if( NET_IsSocketError( setsockopt( net_socket, IPPROTO_IPV6, IPV6_V6ONLY, (char *)&_true, sizeof( _true ))))
@@ -1745,7 +1760,8 @@ static int NET_IPSocket( const char *net_iface, int port, int family )
 			return INVALID_SOCKET;
 		}
 	}
-	else if( family == AF_INET )
+	#endif
+	if( family == AF_INET )
 	{
 		if( Sys_CheckParm( "-tos" ))
 		{
@@ -1914,11 +1930,13 @@ static void NET_GetLocalAddress( void )
 
 		if( NET_StringToAdrEx( buff, &net6_local, AF_INET ))
 		{
-			namelen = sizeof( struct sockaddr_in6 );
+			namelen = sizeof( struct sockaddr_in6 *);
 
 			if( !NET_IsSocketError( getsockname( net.ip6_sockets[NS_SERVER], (struct sockaddr *)&address, &namelen )))
 			{
+				#if !XASH_WIIU
 				net6_local.port = ((struct sockaddr_in6 *)&address)->sin6_port;
+				#endif
 				net_addr_string = NET_AdrToString( net6_local );
 				Con_Printf( "Server IPv6 address %s\n", net_addr_string );
 				Cvar_FullSet( "net6_address", net_addr_string, net6_address.flags );

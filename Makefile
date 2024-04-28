@@ -29,6 +29,8 @@ include $(DEVKITPRO)/wut/share/wut_rules
 # ICON is the game icon, leave blank to use default rule
 # TV_SPLASH is the image displayed during bootup on the TV, leave blank to use default rule
 # DRC_SPLASH is the image displayed during bootup on the DRC, leave blank to use default rule
+#
+# Yes, I have to include this much bullshit because I'm dumb af :D
 #-------------------------------------------------------------------------------
 TARGET		:=	Xash3DU
 BUILD		:=	build
@@ -49,7 +51,10 @@ SOURCES		:=	engine/common \
 				public \
 				ref/soft
 DATA		:=	data
-INCLUDES	:=	engine \
+INCLUDES	:=	include/sys \
+				include/netinet \
+				include/arpa \
+				engine \
 				engine/common \
 				engine/common/imagelib \
 				engine/common/soundlib \
@@ -82,10 +87,7 @@ INCLUDES	:=	engine \
 				3rdparty/mainui/sdk_includes/common \
 				3rdparty/mainui/sdk_includes/engine \
 				3rdparty/mainui/sdk_includes/pm_shared \
-				ref/soft/include \
-				posix/sys \
-				posix/portable \
-				posix/netinet \
+				ref/soft/include
 CONTENT		:=
 ICON		:=	engine/platform/wiiu/icon.png
 TV_SPLASH	:=
@@ -104,7 +106,7 @@ CXXFLAGS	:= $(CFLAGS)
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lwut -lSDL2 -lm -lstdc++ -lcurl
+LIBS	:= -lSDL2 -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lwut -lm -lstdc++ -lcurl #Yes, SDL2 libraries has to be first for it to compile :D
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level

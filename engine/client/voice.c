@@ -13,7 +13,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
-
 #define CUSTOM_MODES 1 // required to correctly link with Opus Custom
 #include <opus_custom.h>
 #include "common.h"
@@ -48,11 +47,13 @@ static qboolean Voice_InitCustomMode( void )
 	voice.samplerate = VOICE_OPUS_CUSTOM_SAMPLERATE;
 	voice.frame_size = VOICE_OPUS_CUSTOM_FRAME_SIZE;
 
+	#if !XASH_WIIU
 	voice.custom_mode = opus_custom_mode_create( SOUND_44k, voice.frame_size, &err );
+	#endif
 
 	if( !voice.custom_mode )
 	{
-		Con_Printf( S_ERROR "Can't create Opus Custom mode: %s\n", opus_strerror( err ));
+		Con_Printf( S_ERROR "Can't create Opus Custom mode: %s\n");
 		return false;
 	}
 
@@ -67,6 +68,9 @@ Voice_InitOpusDecoder
 */
 static qboolean Voice_InitOpusDecoder( void )
 {
+	#if XASH_WIIU
+	return false;
+	#else
 	int err = 0;
 
 	for( int i = 0; i < cl.maxclients; i++ )
@@ -81,6 +85,7 @@ static qboolean Voice_InitOpusDecoder( void )
 	}
 
 	return true;
+	#endif
 }
 
 /*
@@ -91,6 +96,9 @@ Voice_InitOpusEncoder
 */
 static qboolean Voice_InitOpusEncoder( int quality )
 {
+	#if XASH_WIIU
+	return false;
+	#else
 	int err = 0;
 
 	voice.encoder = opus_custom_encoder_create( voice.custom_mode, VOICE_PCM_CHANNELS, &err );
@@ -120,6 +128,7 @@ static qboolean Voice_InitOpusEncoder( int quality )
 	}
 
 	return true;
+	#endif
 }
 
 /*
@@ -130,6 +139,7 @@ Voice_ShutdownOpusDecoder
 */
 static void Voice_ShutdownOpusDecoder( void )
 {
+	#if !XASH_WIIU
 	for( int i = 0; i < MAX_CLIENTS; i++ )
 	{
 		if( !voice.decoders[i] )
@@ -138,6 +148,7 @@ static void Voice_ShutdownOpusDecoder( void )
 		opus_custom_decoder_destroy( voice.decoders[i] );
 		voice.decoders[i] = NULL;
 	}
+	#endif
 }
 
 /*
@@ -147,21 +158,25 @@ Voice_ShutdownOpusEncoder
 =========================
 */
 static void Voice_ShutdownOpusEncoder( void )
-{
+{	
+	#if !XASH_WIIU
 	if( voice.encoder )
 	{
 		opus_custom_encoder_destroy( voice.encoder );
 		voice.encoder = NULL;
 	}
+	#endif
 }
 
 static void Voice_ShutdownCustomMode( void )
 {
+	#if !XASH_WIIU
 	if( voice.custom_mode )
 	{
 		opus_custom_mode_destroy( voice.custom_mode );
 		voice.custom_mode = NULL;
 	}
+	#endif
 }
 
 /*
@@ -206,10 +221,12 @@ static uint Voice_GetOpusCompressedData( byte *out, uint maxsize, uint *frames )
 			Voice_ApplyGainAdjust((opus_int16*)(voice.input_buffer + ofs), voice.frame_size, voice_transmit_scale.value);
 		}
 #endif
-
+		#if !XASH_WIIU
 		bytes = opus_custom_encode( voice.encoder, (const opus_int16 *)( voice.input_buffer + ofs ),
 			voice.frame_size, out + size + sizeof( uint16_t ), maxsize );
-
+		#else
+		bytes = 0; //Just fake it lmfao
+		#endif
 		if( bytes > 0 )
 		{
 			// write compressed frame size
@@ -222,7 +239,7 @@ static uint Voice_GetOpusCompressedData( byte *out, uint maxsize, uint *frames )
 		}
 		else
 		{
-			Con_Printf( S_ERROR "%s: failed to encode frame: %s\n", __func__, opus_strerror( bytes ));
+			Con_Printf( S_ERROR "%s: failed to encode frame: %s\n", __func__);
 		}
 	}
 
@@ -496,8 +513,10 @@ void Voice_AddIncomingData( int ent, const byte *data, uint size, uint frames )
 		if( ofs + compressed_size > size )
 			break;
 
+		#if !XASH_WIIU
 		frame_samples = opus_custom_decode( voice.decoders[playernum], data + ofs, compressed_size,
 			(opus_int16*)voice.decompress_buffer + samples, voice.frame_size );
+		#endif
 
 		ofs += compressed_size;
 		samples += frame_samples;

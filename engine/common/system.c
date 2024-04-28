@@ -140,7 +140,7 @@ const char *Sys_GetCurrentUser( void )
 	sceAppUtilSystemParamGetString( SCE_SYSTEM_PARAM_ID_USERNAME, username, sizeof( username ) - 1 );
 	if( COM_CheckStringEmpty( username ))
 		return username;
-#elif XASH_POSIX && !XASH_ANDROID && !XASH_NSWITCH
+#elif XASH_POSIX && !XASH_ANDROID && !XASH_NSWITCH && !XASH_WIIU
 	uid_t uid = geteuid();
 	struct passwd *pw = getpwuid( uid );
 

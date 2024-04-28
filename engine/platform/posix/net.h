@@ -15,14 +15,14 @@ GNU General Public License for more details.
 #ifndef NET_H
 #define NET_H
 
-#include <sys/types.h>
-#include <sys/socket.h>
+#include "sys/types.h"
+#include "sys/socket.h"
 #if !XASH_PSVITA
 #include <sys/ioctl.h>
 #endif
-#include <sys/select.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include "sys/select.h"
+#include "netinet/in.h"
+#include "arpa/inet.h"
 #include <netdb.h>
 #include <errno.h>
 #include <fcntl.h>

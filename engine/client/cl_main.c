@@ -24,6 +24,7 @@ GNU General Public License for more details.
 #include "vid_common.h"
 #include "pm_local.h"
 #include "ref_common.h"
+#include "platform/platform.h"
 
 #define MAX_TOTAL_CMDS		32
 #define MAX_CMD_BUFFER		8000
@@ -628,7 +629,7 @@ static void CL_CreateCmd( void )
 	}
 
 	active = (( cls.signon == SIGNONS ) && !cl.paused && !cls.demoplayback );
-	Platform_PreCreateMove();
+	//Platform_PreCreateMove();
 	clgame.dllFuncs.CL_CreateMove( host.frametime, cmd, active );
 	IN_EngineAppendMove( host.frametime, cmd, active  );
 

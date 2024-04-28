@@ -1,3 +1,17 @@
+/*
+main.c - Wii U Xash3D Launcher
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*/
+
 #ifdef __WIIU__
 
 #include <stdio.h>
@@ -14,6 +28,8 @@
 #include <whb/proc.h>
 #include <whb/log_console.h>
 #include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
 
 #define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
 
@@ -57,6 +73,10 @@ static int Sys_Start( void )
 		game = XASH_GAMEDIR;
 
 	Q_strncpy( szGameDir, game, sizeof( szGameDir ));
+
+    WHBLogPrintf("Launching game...");
+    WHBLogConsoleDraw();
+    OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	return Host_Main( szArgc, szArgv, game, 0, Sys_ChangeGame );
 }
@@ -124,11 +144,12 @@ int main(int argc, char **argv)
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
 
+            OSSleepTicks(OSMillisecondsToTicks(4000)); //Wait before game launches
             //Launch the game
             glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
-	        Sys_Start(); //we don't wanna launch yet
+	        Sys_Start();
             
             displayed = true;
             WHBLogPrintf("If we're here, game didn't load");
