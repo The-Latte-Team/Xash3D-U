@@ -32,6 +32,7 @@ GNU General Public License for more details.
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
 #include <whb/sdcard.h>
+#include "cafe_utils.h"
 
 #define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
 
@@ -90,7 +91,7 @@ int main(int argc, char **argv)
     WHBLogConsoleInit();
     WHBLogConsoleSetColor(0x000000);
 
-    WHBLogPrintf("Xash3D U");
+    WHBLogPrintf("Half-Life");
     WHBLogConsoleDraw();
 
     VPADStatus status;
@@ -143,26 +144,22 @@ int main(int argc, char **argv)
         if (vpad_fatal) break;
 
         if(valveFolderAvailable && !displayed){
-            if (!WHBMountSdCard())
-		        return;
-            theSdCardPath = WHBGetSdCardMountPath();
-            if (theSdCardPath == NULL)
-                return;
-            chdir(theSdCardPath);
-	        strcat(theSdCardPath, "/wiiu/apps/xash3DU/valve/");
-
-            WHBLogPrintf( theSdCardPath );
-	        WHBLogConsoleDraw();
-	        //OSSleepTicks(OSMillisecondsToTicks(1000));
-            
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
 
             OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
             //Launch the game
-            glw_state.software = true; //force it to be always software
+            //glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
+            
+            GetSDCardPath();
+	        modifiedSDCardPath = sdCard;
+
+            WHBLogPrintf( sdCard );
+	        WHBLogConsoleDraw();
+	        //OSSleepTicks(OSMillisecondsToTicks(1000));
+
 	        Sys_Start();
             
             displayed = true;

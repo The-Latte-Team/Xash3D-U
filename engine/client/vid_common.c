@@ -47,6 +47,7 @@ CVAR_DEFINE( window_xpos, "_window_xpos", "-1", FCVAR_RENDERINFO, "window positi
 CVAR_DEFINE( window_ypos, "_window_ypos", "-1", FCVAR_RENDERINFO, "window position by vertical" );
 
 glwstate_t	glw_state;
+char *modifiedSDCardPath;
 
 /*
 =================
@@ -230,16 +231,12 @@ void VID_Init( void )
 	// but supported mode list is filled by backends, so numbers are not portable any more
 	//Cmd_AddRestrictedCommand( "vid_setmode", VID_Mode_f, "display video mode" );
 
-	WHBLogPrintf("left nut");
-    WHBLogConsoleDraw();
+	modifiedSDCardPath = sdCard;
+
+    WHBLogPrintf( modifiedSDCardPath );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	V_Init(); // init gamma
-
-	WHBLogPrintf("right nut");
-    WHBLogConsoleDraw();
-
 	Init(); // init renderer
-
-	WHBLogPrintf("pingas");
-    WHBLogConsoleDraw();
 }

@@ -504,7 +504,7 @@ static void Host_InitDecals( void )
 
 	char *filesLoaderPath;
 	filesLoaderPath = "gfx.wad";
-	prepend(filesLoaderPath, theSdCardPath);
+	prepend(filesLoaderPath, sdCard);
 
 	// NOTE: only once resource without which engine can't continue work
 	if( fptr = fopen( filesLoaderPath, "rb" ) != NULL){
@@ -515,7 +515,7 @@ static void Host_InitDecals( void )
 
 	//Should I do this? Idk, you tell me lol
 	filesLoaderPath = "decals.wad";
-	prepend(filesLoaderPath, theSdCardPath);
+	prepend(filesLoaderPath, sdCard);
 	// lookup all the decals in decals.wad (basedir, gamedir, falldir)
 	t = fopen( filesLoaderPath, "rb" );
 
@@ -1184,7 +1184,7 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 
 	pChangeGame = func;	// may be NULL
 
-	WHBLogPrintf( theSdCardPath );
+	WHBLogPrintf( sdCard );
 	WHBLogConsoleDraw();
 	OSSleepTicks(OSMillisecondsToTicks(1000));
 

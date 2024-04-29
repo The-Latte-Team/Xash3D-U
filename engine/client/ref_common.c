@@ -22,8 +22,6 @@
 struct ref_state_s ref;
 ref_globals_t refState;
 
-char *theSdCardPath;
-
 CVAR_DEFINE_AUTO( gl_vsync, "0", FCVAR_ARCHIVE,  "enable vertical syncronization" );
 CVAR_DEFINE_AUTO( r_showtextures, "0", FCVAR_CHEAT, "show all uploaded textures" );
 CVAR_DEFINE_AUTO( r_adjust_fov, "1", FCVAR_ARCHIVE, "making FOV adjustment for wide-screens" );
@@ -599,17 +597,9 @@ qboolean Init( void )
 {
 	qboolean success = false;
 	string requested;
-	
-	WHBLogPrintf( theSdCardPath );
-	WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	WHBLogPrintf("is this real chat?");
     WHBLogConsoleDraw();
-
-	WHBLogPrintf( theSdCardPath );
-	WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	Cvar_RegisterVariable( &gl_vsync );
 	Cvar_RegisterVariable( &r_showtextures );
@@ -658,7 +648,7 @@ qboolean Init( void )
 
 	R_CollectRendererNames();
 
-	WHBLogPrintf( theSdCardPath );
+	WHBLogPrintf( modifiedSDCardPath );
 	WHBLogConsoleDraw();
 	OSSleepTicks(OSMillisecondsToTicks(1000));
 

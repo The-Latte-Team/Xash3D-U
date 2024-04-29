@@ -32,7 +32,7 @@ GNU General Public License for more details.
 // global image variables
 imglib_t	image;
 
-char *sdPath;
+const char *sdPath;
 
 typedef struct suffix_s
 {
@@ -320,6 +320,9 @@ loading and unpack to rgba any known image
 */
 rgbdata_t *FS_LoadImage( const char *filename, const byte *buffer, size_t size )
 {
+	sdPath = WHBGetSdCardMountPath();
+	strcat(sdPath, "/wiiu/apps/xash3DU/valve/");
+
 	const char	*ext = COM_FileExtension( filename );
 	string		loadname;
 	int		i;
@@ -337,9 +340,6 @@ rgbdata_t *FS_LoadImage( const char *filename, const byte *buffer, size_t size )
 	// special mode: skip any checks, load file from buffer
 	if( filename[0] == '#' && buffer && size )
 		goto load_internal;
-
-	sdPath = WHBGetSdCardMountPath();
-	strcat(sdPath, "/wiiu/apps/xash3DU/valve/");
 
 	if( Image_ProbeLoad( extfmt, loadname, "", -1 ))
 		return ImagePack();
