@@ -20,6 +20,7 @@ GNU General Public License for more details.
 
 #define RP_LOCALCLIENT( e )	((e) != NULL && (e)->index == ( cl.playernum + 1 ) && e->player )
 
+extern char *theSdCardPath;
 struct ref_state_s
 {
 	qboolean initialized;

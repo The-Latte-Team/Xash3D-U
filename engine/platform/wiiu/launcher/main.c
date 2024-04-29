@@ -44,6 +44,7 @@ GNU General Public License for more details.
 #include "build.h"
 #include "common.h"
 #include "vid_common.h"
+#include "ref_common.h"
 
 #define E_GAME	"XASH3D_GAME" // default env dir to start from
 #ifndef XASH_GAMEDIR
@@ -144,10 +145,15 @@ int main(int argc, char **argv)
         if(valveFolderAvailable && !displayed){
             if (!WHBMountSdCard())
 		        return;
-            const char *sd_path = WHBGetSdCardMountPath();
-            if (sd_path == NULL)
+            theSdCardPath = WHBGetSdCardMountPath();
+            if (theSdCardPath == NULL)
                 return;
-            chdir(sd_path);
+            chdir(theSdCardPath);
+	        strcat(theSdCardPath, "/wiiu/apps/xash3DU/valve/");
+
+            WHBLogPrintf( theSdCardPath );
+	        WHBLogConsoleDraw();
+	        //OSSleepTicks(OSMillisecondsToTicks(1000));
             
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();

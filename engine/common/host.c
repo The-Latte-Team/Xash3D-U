@@ -67,8 +67,6 @@ sysinfo_t		SI;
 struct tests_stats_s tests_stats;
 #endif
 
-char *sdCardPath;
-
 CVAR_DEFINE( host_developer, "developer", "0", FCVAR_FILTERABLE, "engine is in development-mode" );
 CVAR_DEFINE_AUTO( sys_timescale, "1.0", FCVAR_FILTERABLE, "scale frame time" );
 CVAR_DEFINE_AUTO( sys_ticrate, "100", 0, "framerate in dedicated mode" );
@@ -506,7 +504,7 @@ static void Host_InitDecals( void )
 
 	char *filesLoaderPath;
 	filesLoaderPath = "gfx.wad";
-	prepend(filesLoaderPath, sdCardPath);
+	prepend(filesLoaderPath, theSdCardPath);
 
 	// NOTE: only once resource without which engine can't continue work
 	if( fptr = fopen( filesLoaderPath, "rb" ) != NULL){
@@ -517,7 +515,7 @@ static void Host_InitDecals( void )
 
 	//Should I do this? Idk, you tell me lol
 	filesLoaderPath = "decals.wad";
-	prepend(filesLoaderPath, sdCardPath);
+	prepend(filesLoaderPath, theSdCardPath);
 	// lookup all the decals in decals.wad (basedir, gamedir, falldir)
 	t = fopen( filesLoaderPath, "rb" );
 
@@ -1186,8 +1184,9 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 
 	pChangeGame = func;	// may be NULL
 
-	sdCardPath = WHBGetSdCardMountPath();
-	strcat(sdCardPath, "/wiiu/apps/xash3DU/valve/");
+	WHBLogPrintf( theSdCardPath );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	Host_InitCommon( argc, argv, progname, bChangeGame );
 

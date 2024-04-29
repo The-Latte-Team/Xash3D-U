@@ -1938,7 +1938,7 @@ qboolean S_Init( void )
 	Cvar_RegisterVariable( &s_samplecount );
 	Cvar_RegisterVariable( &s_warn_late_precache );
 
-	Cmd_AddCommand( "play", S_Play_f, "playing a specified sound file" );
+	/*Cmd_AddCommand( "play", S_Play_f, "playing a specified sound file" );
 	Cmd_AddCommand( "play2", S_Play2_f, "playing a group of specified sound files" ); // nehahra stuff
 	Cmd_AddCommand( "playvol", S_PlayVol_f, "playing a specified sound file with specified volume" );
 	Cmd_AddCommand( "stopsound", S_StopSound_f, "stop all sounds" );
@@ -1949,12 +1949,12 @@ qboolean S_Init( void )
 	Cmd_AddCommand( "+voicerecord", S_VoiceRecordStart_f, "start voice recording" );
 	Cmd_AddCommand( "-voicerecord", S_VoiceRecordStop_f, "stop voice recording" );
 	Cmd_AddCommand( "spk", S_SayReliable_f, "reliable play a specified sententce" );
-	Cmd_AddCommand( "speak", S_Say_f, "playing a specified sententce" );
+	Cmd_AddCommand( "speak", S_Say_f, "playing a specified sententce" );*/
 
 	dma.backendName = "None";
 	if( !SNDDMA_Init( ) )
 	{
-		Con_Printf( "Audio: sound system can't be initialized\n" );
+		printf( "Audio: sound system can't be initialized\n" );
 		return false;
 	}
 

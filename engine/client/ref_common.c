@@ -22,6 +22,8 @@
 struct ref_state_s ref;
 ref_globals_t refState;
 
+char *theSdCardPath;
+
 CVAR_DEFINE_AUTO( gl_vsync, "0", FCVAR_ARCHIVE,  "enable vertical syncronization" );
 CVAR_DEFINE_AUTO( r_showtextures, "0", FCVAR_CHEAT, "show all uploaded textures" );
 CVAR_DEFINE_AUTO( r_adjust_fov, "1", FCVAR_ARCHIVE, "making FOV adjustment for wide-screens" );
@@ -388,25 +390,35 @@ static void CL_FillTriAPIFromRef( triangleapi_t *dst, const ref_interface_t *src
 	dst->FogParams         = src->FogParams;
 }
 
-static qboolean R_LoadProgs( const char *name )
+static qboolean R_LoadProgs( char *name )
 {
 	extern triangleapi_t gTriApi;
 	static ref_api_t gpEngfuncs;
 	REFAPI GetRefAPI; // single export
 
+	WHBLogPrintf( "I wonder if it's because of the logs" );
+	WHBLogConsoleDraw();
+
 	if( ref.hInstance ) R_UnloadProgs();
 
-	FS_AllowDirectPaths( true );
+	WHBLogPrintf( "I hope" );
+	WHBLogConsoleDraw();
+
+	//FS_AllowDirectPaths( true );
+
+	WHBLogPrintf( "it's not :/" );
+	WHBLogConsoleDraw();
+
 	if( !(ref.hInstance = COM_LoadLibrary( name, false, true ) ))
 	{
-		FS_AllowDirectPaths( false );
+		//FS_AllowDirectPaths( false );
 		WHBLogPrintf( "R_LoadProgs: can't load renderer library %s: %s\n", name, COM_GetLibraryError() );
 		WHBLogConsoleDraw();
 		OSSleepTicks(OSMillisecondsToTicks(1000));
 		return false;
 	}
 
-	FS_AllowDirectPaths( false );
+	//FS_AllowDirectPaths( false );
 
 	if( !( GetRefAPI = (REFAPI)COM_GetProcAddress( ref.hInstance, GET_REF_API )) )
 	{
@@ -550,7 +562,7 @@ static void SetFullscreenModeFromCommandLine( void )
 static void R_CollectRendererNames( void )
 {
 	// ordering is important!
-	/*static const char *shortNames[] =
+	static const char *shortNames[] =
 	{
 		"soft"
 	};
@@ -559,13 +571,11 @@ static void R_CollectRendererNames( void )
 	static const char *readableNames[ARRAYSIZE( shortNames )] =
 	{
 		"Software"
-	};*/
-	const char *shortName = "soft";
-	const char *readableName = "Software";
+	};
 
 	ref.numRenderers = 1;
-	ref.shortNames = shortName;
-	ref.readableNames = readableName;
+	ref.shortNames = shortNames;
+	ref.readableNames = readableNames;
 }
 
 convar_t	*r_fullbright;
@@ -589,9 +599,17 @@ qboolean Init( void )
 {
 	qboolean success = false;
 	string requested;
+	
+	WHBLogPrintf( theSdCardPath );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	WHBLogPrintf("is this real chat?");
     WHBLogConsoleDraw();
+
+	WHBLogPrintf( theSdCardPath );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	Cvar_RegisterVariable( &gl_vsync );
 	Cvar_RegisterVariable( &r_showtextures );
@@ -640,6 +658,12 @@ qboolean Init( void )
 
 	R_CollectRendererNames();
 
+	WHBLogPrintf( theSdCardPath );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
+
+	requested[4] = *"soft";
+
 	WHBLogPrintf("huh");
     WHBLogConsoleDraw();
 
@@ -647,14 +671,13 @@ qboolean Init( void )
 	// 1. Command line `-ref` argument.
 	// 2. `ref_dll` cvar.
 	// 3. Detected renderers in `DEFAULT_RENDERERS` order.
-	requested[0] = 0;
 
 	WHBLogPrintf("hussh");
     WHBLogConsoleDraw();
 
 	//Force software renderer?
-	if( !success && Sys_GetParmFromCmdLine( "-ref", "soft" ))
-		success = R_LoadRenderer( "soft" );
+	if( !success && Sys_GetParmFromCmdLine( "-ref", requested ))
+		success = R_LoadRenderer( requested );
 
 	/*WHBLogPrintf(requested);
     WHBLogConsoleDraw();*/
@@ -665,11 +688,7 @@ qboolean Init( void )
 	if( !success /*&& COM_CheckString( r_refdll.string )*/)
 	{
 		//Q_strncpy( requested, r_refdll.string, sizeof( requested ));
-		success = R_LoadRenderer( "soft" );
-		if(!success) //fail save measure (?)
-		{
-			success = R_LoadRenderer( "Software" );
-		}
+		success = R_LoadRenderer( requested );
 	}
 
 	WHBLogPrintf("real");
