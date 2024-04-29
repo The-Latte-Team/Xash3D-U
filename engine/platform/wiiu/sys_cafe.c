@@ -26,8 +26,10 @@ GNU General Public License for more details.
 #include <whb/proc.h>
 #include <whb/log_console.h>
 #include <whb/log.h>
+#include <whb/sdcard.h>
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
+#include <coreinit/exit.h>
 
 void Platform_ShellExecute( const char *path, const char *parms )
 {
@@ -37,10 +39,11 @@ void Platform_ShellExecute( const char *path, const char *parms )
 void Cafe_Shutdown( void )
 {
 	WHBProcStopRunning();
-	ProcUIShutdown();
+	//ProcUIShutdown();
 	
 	WHBLogConsoleFree();
     WHBProcShutdown();
 	WHBUnmountSdCard();
+	exit(0);
 	return;
 }

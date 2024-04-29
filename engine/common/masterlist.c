@@ -411,14 +411,13 @@ Initialize master server list
 */
 void NET_InitMasters( void )
 {
-	Cmd_AddRestrictedCommand( "addmaster", NET_AddMaster_f, "add address to masterserver list" );
+	/*Cmd_AddRestrictedCommand( "addmaster", NET_AddMaster_f, "add address to masterserver list" );
 	Cmd_AddRestrictedCommand( "clearmasters", NET_ClearMasters_f, "clear masterserver list" );
 	Cmd_AddCommand( "listmasters", NET_ListMasters_f, "list masterservers" );
-
 	Cvar_RegisterVariable( &sv_verbose_heartbeats );
 
 	// keep main master always there
 	NET_AddMaster( MASTERSERVER_ADR, false );
 	NET_AddMaster( MASTERSERVER_ADR_TEST, false );
-	NET_LoadMasters( );
+	NET_LoadMasters( );*/
 }

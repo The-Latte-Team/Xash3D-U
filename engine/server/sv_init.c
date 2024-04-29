@@ -730,6 +730,9 @@ A brand new game has been started
 */
 qboolean SV_InitGame( void )
 {
+	#if XASH_WIIU
+	return false;
+	#endif
 	string dllpath;
 
 	if( svgame.hInstance )

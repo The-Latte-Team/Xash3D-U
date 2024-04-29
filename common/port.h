@@ -49,6 +49,7 @@ GNU General Public License for more details.
 			#define RTLD_NOW 0
 			#define XASH_SDL 2
 			#define O_BINARY 0
+			#define XASH_REF_SOFT_ENABLED 0
 			//#define XASH_NO_NETWORK 0
 		#else
 			#include <dlfcn.h>

@@ -26,6 +26,19 @@ GNU General Public License for more details.
 #include "ref_common.h"
 #include "platform/platform.h"
 
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
+#endif
+
 #define MAX_TOTAL_CMDS		32
 #define MAX_CMD_BUFFER		8000
 #define CONNECTION_PROBLEM_TIME	15.0	// 15 seconds
@@ -3162,11 +3175,25 @@ void CL_Init( void )
 	if( host.type == HOST_DEDICATED )
 		return; // nothing running on the client
 
+	WHBLogPrintf("hello?");
+    WHBLogConsoleDraw();
+
 	CL_InitLocal();
 
+	WHBLogPrintf("anyone?");
+    WHBLogConsoleDraw();
+
 	VID_Init();	// init video
+
+	WHBLogPrintf("pwease");
+    WHBLogConsoleDraw();
+
 	S_Init();	// init sound
-	Voice_Init( VOICE_DEFAULT_CODEC, 3, true ); // init voice (do not open the device)
+
+	WHBLogPrintf("im lonle");
+    WHBLogConsoleDraw();
+
+	//Voice_Init( VOICE_DEFAULT_CODEC, 3, true ); // init voice (do not open the device)
 
 	// unreliable buffer. unsed for unreliable commands and voice stream
 	MSG_Init( &cls.datagram, "cls.datagram", cls.datagram_buf, sizeof( cls.datagram_buf ));

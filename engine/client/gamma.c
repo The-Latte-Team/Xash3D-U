@@ -163,11 +163,11 @@ void V_CheckGammaEnd( void )
 
 void V_Init( void )
 {
-	Cvar_RegisterVariable( &v_texgamma );
+	/*Cvar_RegisterVariable( &v_texgamma );
 	Cvar_RegisterVariable( &v_lightgamma );
 	Cvar_RegisterVariable( &v_brightness );
 	Cvar_RegisterVariable( &v_gamma );
-	Cvar_RegisterVariable( &v_direct );
+	Cvar_RegisterVariable( &v_direct );*/
 
 	// force gamma init
 	SetBits( v_gamma.flags, FCVAR_CHANGED );

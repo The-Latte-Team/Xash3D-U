@@ -846,7 +846,7 @@ void SV_Init( void )
 
 	SV_InitHostCommands();
 
-	Cvar_Getf( "protocol", FCVAR_READ_ONLY, "displays server protocol version", "%i", PROTOCOL_VERSION );
+	/*Cvar_Getf( "protocol", FCVAR_READ_ONLY, "displays server protocol version", "%i", PROTOCOL_VERSION );
 	Cvar_Get( "suitvolume", "0.25", FCVAR_ARCHIVE, "HEV suit volume" );
 	Cvar_Get( "sv_background", "0", FCVAR_READ_ONLY, "indicate what background map is running" );
 	Cvar_Get( "gamedir", GI->gamefolder, FCVAR_READ_ONLY, "game folder" );
@@ -854,7 +854,7 @@ void SV_Init( void )
 	Cvar_Get( "sv_allow_PhysX", "1", FCVAR_ARCHIVE, "allow XashXT to usage PhysX engine" );			// XashXT cvar
 	Cvar_Get( "sv_precache_meshes", "1", FCVAR_ARCHIVE, "cache SOLID_CUSTOM meshes before level loading" );	// Paranoia 2 cvar
 	Cvar_Get( "servercfgfile", "server.cfg", 0, "name of dedicated server configuration file" );
-	Cvar_Get( "lservercfgfile", "listenserver.cfg", 0, "name of listen server configuration file" );
+	Cvar_Get( "lservercfgfile", "listenserver.cfg", 0, "name of listen server configuration file" );*/
 
 	Cvar_RegisterVariable( &sv_zmax );
 	Cvar_RegisterVariable( &sv_wateramp );
@@ -883,7 +883,7 @@ void SV_Init( void )
 	Cvar_RegisterVariable( &skill );
 	Cvar_RegisterVariable( &temp1 );
 
-	Cvar_RegisterVariable( &rcon_password );
+	/*Cvar_RegisterVariable( &rcon_password );
 	Cvar_RegisterVariable( &rcon_enable );
 	Cvar_RegisterVariable( &sv_stepsize );
 	Cvar_RegisterVariable( &sv_newunit );
@@ -972,20 +972,22 @@ void SV_Init( void )
 	Cvar_RegisterVariable( &sv_userinfo_penalty_multiplier );
 	Cvar_RegisterVariable( &sv_userinfo_penalty_attempts );
 	Cvar_RegisterVariable( &sv_fullupdate_penalty_time );
-	Cvar_RegisterVariable( &sv_log_outofband );
+	Cvar_RegisterVariable( &sv_log_outofband );*/
 
 	// when we in developer-mode automatically turn cheats on
 	if( host_developer.value ) Cvar_SetValue( "sv_cheats", 1.0f );
 
 	MSG_Init( &net_message, "NetMessage", net_message_buffer, sizeof( net_message_buffer ));
 
-	Q_snprintf( versionString, sizeof( versionString ), XASH_ENGINE_NAME ": " XASH_VERSION "-%s(%s-%s),%i,%i",
-		Q_buildcommit(), Q_buildos(), Q_buildarch(), PROTOCOL_VERSION, Q_buildnum() );
-
-	Cvar_FullSet( "sv_version", versionString, FCVAR_READ_ONLY );
+	/*Q_snprintf( versionString, sizeof( versionString ), XASH_ENGINE_NAME ": " XASH_VERSION "-%s(%s-%s),%i,%i",
+		4444, 42, 44, PROTOCOL_VERSION, 1 );*/
+	
+	//Cvar_FullSet( "sv_version", versionString, FCVAR_READ_ONLY );
 
 	SV_InitFilter();
-	SV_ClearGameState ();	// delete all temporary *.hl files
+
+	//SV_ClearGameState ();	// delete all temporary *.hl files
+
 	SV_InitGame();
 }
 

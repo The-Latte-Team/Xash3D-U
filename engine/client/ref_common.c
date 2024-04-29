@@ -4,6 +4,20 @@
 #include "cl_tent.h"
 #include "platform/platform.h"
 #include "vid_common.h"
+#include "crtlib.h"
+
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
+#endif
 
 struct ref_state_s ref;
 ref_globals_t refState;
@@ -15,7 +29,7 @@ CVAR_DEFINE_AUTO( r_decals, "4096", FCVAR_ARCHIVE, "sets the maximum number of d
 CVAR_DEFINE_AUTO( gl_msaa_samples, "0", FCVAR_GLCONFIG, "samples number for multisample anti-aliasing" );
 CVAR_DEFINE_AUTO( gl_clear, "0", FCVAR_ARCHIVE, "clearing screen after each frame" );
 CVAR_DEFINE_AUTO( r_showtree, "0", FCVAR_ARCHIVE, "build the graph of visible BSP tree" );
-static CVAR_DEFINE_AUTO( r_refdll, "", FCVAR_RENDERINFO, "choose renderer implementation, if supported" );
+static CVAR_DEFINE_AUTO( r_refdll, "soft", FCVAR_RENDERINFO, "choose renderer implementation, if supported" );
 static CVAR_DEFINE_AUTO( r_refdll_loaded, "", FCVAR_READ_ONLY, "currently loaded renderer" );
 
 // there is no need to expose whole host and cl structs into the renderer
@@ -386,7 +400,9 @@ static qboolean R_LoadProgs( const char *name )
 	if( !(ref.hInstance = COM_LoadLibrary( name, false, true ) ))
 	{
 		FS_AllowDirectPaths( false );
-		Con_Reportf( "R_LoadProgs: can't load renderer library %s: %s\n", name, COM_GetLibraryError() );
+		WHBLogPrintf( "R_LoadProgs: can't load renderer library %s: %s\n", name, COM_GetLibraryError() );
+		WHBLogConsoleDraw();
+		OSSleepTicks(OSMillisecondsToTicks(1000));
 		return false;
 	}
 
@@ -483,17 +499,24 @@ static qboolean R_LoadRenderer( const char *refopt )
 
 	R_GetRendererName( refdll, sizeof( refdll ), refopt );
 
-	Con_Printf( "Loading renderer: %s -> %s\n", refopt, refdll );
+	WHBLogPrintf( "Loading renderer: %s -> %s\n", refopt, refdll );
+	WHBLogConsoleDraw();
 
 	if( !R_LoadProgs( refdll ))
 	{
 		Shutdown();
-		Sys_Warn( S_ERROR "Can't initialize %s renderer!\n", refdll );
+		WHBLogPrintf( "Can't initialize %s renderer!\n", refdll );
+		WHBLogConsoleDraw();
+		OSSleepTicks(OSMillisecondsToTicks(1000)); 
 		return false;
 	}
 
 	Cvar_FullSet( "r_refdll_loaded", refopt, FCVAR_READ_ONLY );
 	Con_Reportf( "Renderer %s initialized\n", refdll );
+	
+	WHBLogPrintf( "It loaded ig?" );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000)); 
 
 	return true;
 }
@@ -527,54 +550,22 @@ static void SetFullscreenModeFromCommandLine( void )
 static void R_CollectRendererNames( void )
 {
 	// ordering is important!
-	static const char *shortNames[] =
+	/*static const char *shortNames[] =
 	{
-#if XASH_REF_GL_ENABLED
-		"gl",
-#endif
-#if XASH_REF_NANOGL_ENABLED
-		"gles1",
-#endif
-#if XASH_REF_GLWES_ENABLED
-		"gles2",
-#endif
-#if XASH_REF_GL4ES_ENABLED
-		"gl4es",
-#endif
-#if XASH_REF_GLES3COMPAT_ENABLED
-		"gles3compat",
-#endif
-#if XASH_REF_SOFT_ENABLED
-		"soft",
-#endif
+		"soft"
 	};
 
 	// ordering is important here too!
 	static const char *readableNames[ARRAYSIZE( shortNames )] =
 	{
-#if XASH_REF_GL_ENABLED
-		"OpenGL",
-#endif
-#if XASH_REF_NANOGL_ENABLED
-		"GLES1 (NanoGL)",
-#endif
-#if XASH_REF_GLWES_ENABLED
-		"GLES2 (gl-wes-v2)",
-#endif
-#if XASH_REF_GL4ES_ENABLED
-		"GL4ES",
-#endif
-#if XASH_REF_GLES3COMPAT_ENABLED
-		"GLES3 (gl2_shim)",
-#endif
-#if XASH_REF_SOFT_ENABLED
-		"Software",
-#endif
-	};
+		"Software"
+	};*/
+	const char *shortName = "soft";
+	const char *readableName = "Software";
 
-	ref.numRenderers = ARRAYSIZE( shortNames );
-	ref.shortNames = shortNames;
-	ref.readableNames = readableNames;
+	ref.numRenderers = 1;
+	ref.shortNames = shortName;
+	ref.readableNames = readableName;
 }
 
 convar_t	*r_fullbright;
@@ -599,6 +590,9 @@ qboolean Init( void )
 	qboolean success = false;
 	string requested;
 
+	WHBLogPrintf("is this real chat?");
+    WHBLogConsoleDraw();
+
 	Cvar_RegisterVariable( &gl_vsync );
 	Cvar_RegisterVariable( &r_showtextures );
 	Cvar_RegisterVariable( &r_adjust_fov );
@@ -608,6 +602,9 @@ qboolean Init( void )
 	Cvar_RegisterVariable( &r_showtree );
 	Cvar_RegisterVariable( &r_refdll );
 	Cvar_RegisterVariable( &r_refdll_loaded );
+
+	WHBLogPrintf("prob not lmao");
+    WHBLogConsoleDraw();
 
 	// cvars that are expected to exist
 	r_speeds = Cvar_Get( "r_speeds", "0", FCVAR_ARCHIVE, "shows renderer speeds" );
@@ -643,20 +640,40 @@ qboolean Init( void )
 
 	R_CollectRendererNames();
 
+	WHBLogPrintf("huh");
+    WHBLogConsoleDraw();
+
 	// Priority:
 	// 1. Command line `-ref` argument.
 	// 2. `ref_dll` cvar.
 	// 3. Detected renderers in `DEFAULT_RENDERERS` order.
 	requested[0] = 0;
 
-	if( !success && Sys_GetParmFromCmdLine( "-ref", requested ))
-		success = R_LoadRenderer( requested );
+	WHBLogPrintf("hussh");
+    WHBLogConsoleDraw();
 
-	if( !success && COM_CheckString( r_refdll.string ))
+	//Force software renderer?
+	if( !success && Sys_GetParmFromCmdLine( "-ref", "soft" ))
+		success = R_LoadRenderer( "soft" );
+
+	/*WHBLogPrintf(requested);
+    WHBLogConsoleDraw();*/
+
+	WHBLogPrintf("no success?");
+    WHBLogConsoleDraw();
+
+	if( !success /*&& COM_CheckString( r_refdll.string )*/)
 	{
-		Q_strncpy( requested, r_refdll.string, sizeof( requested ));
-		success = R_LoadRenderer( requested );
+		//Q_strncpy( requested, r_refdll.string, sizeof( requested ));
+		success = R_LoadRenderer( "soft" );
+		if(!success) //fail save measure (?)
+		{
+			success = R_LoadRenderer( "Software" );
+		}
 	}
+
+	WHBLogPrintf("real");
+    WHBLogConsoleDraw();
 
 	if( !success )
 	{
@@ -671,12 +688,19 @@ qboolean Init( void )
 			success = R_LoadRenderer( ref.shortNames[i] );
 		}
 	}
+	
+	WHBLogPrintf("psaasaslpelelplpelpe i");
+    WHBLogConsoleDraw();
 
 	if( !success )
 	{
-		Host_Error( "Can't initialize any renderer. Check your video drivers!\n" );
+		WHBLogPrintf( "Can't initialize any renderer. Big Wii U Problem :/ (not even software, holy shit)" );
+		WHBLogConsoleDraw();
 		return false;
 	}
+
+	WHBLogPrintf("can i");
+    WHBLogConsoleDraw();
 
 	SCR_Init();
 

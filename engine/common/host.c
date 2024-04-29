@@ -54,7 +54,9 @@ GNU General Public License for more details.
 #include <whb/log_console.h>
 #include <whb/log.h>
 #include <coreinit/thread.h>
+#include <whb/sdcard.h>
 #include <coreinit/time.h>
+#include "cafe_utils.h"
 #endif
 
 pfnChangeGame	pChangeGame = NULL;
@@ -64,6 +66,8 @@ sysinfo_t		SI;
 #ifdef XASH_ENGINE_TESTS
 struct tests_stats_s tests_stats;
 #endif
+
+char *sdCardPath;
 
 CVAR_DEFINE( host_developer, "developer", "0", FCVAR_FILTERABLE, "engine is in development-mode" );
 CVAR_DEFINE_AUTO( sys_timescale, "1.0", FCVAR_FILTERABLE, "scale frame time" );
@@ -498,33 +502,33 @@ static void Host_InitDecals( void )
 {
 	int	i, num_decals = 0;
 	search_t	*t;
-	
-	WHBLogPrintf("istg");
-    WHBLogConsoleDraw();
+	FILE *fptr;
+
+	char *filesLoaderPath;
+	filesLoaderPath = "gfx.wad";
+	prepend(filesLoaderPath, sdCardPath);
 
 	// NOTE: only once resource without which engine can't continue work
-	if( !FS_FileExists( "gfx/conchars", false )){
+	if( fptr = fopen( filesLoaderPath, "rb" ) != NULL){
 		Sys_Quit();
 	}
 
 	memset( host.draw_decals, 0, sizeof( host.draw_decals ));
 
+	//Should I do this? Idk, you tell me lol
+	filesLoaderPath = "decals.wad";
+	prepend(filesLoaderPath, sdCardPath);
 	// lookup all the decals in decals.wad (basedir, gamedir, falldir)
-	t = FS_Search( "decals.wad/*.*", true, false );
+	t = fopen( filesLoaderPath, "rb" );
 
 	for( i = 0; t && i < t->numfilenames; i++ )
 	{
 		if( !Host_RegisterDecal( t->filenames[i], &num_decals ))
 			break;
 	}
-	WHBLogPrintf("real");
-    WHBLogConsoleDraw();
 
 	if( t ) Mem_Free( t );
 	Con_Reportf( "InitDecals: %i decals\n", num_decals );
-
-	WHBLogPrintf("bitch");
-    WHBLogConsoleDraw();
 }
 
 /*
@@ -1182,6 +1186,9 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 
 	pChangeGame = func;	// may be NULL
 
+	sdCardPath = WHBGetSdCardMountPath();
+	strcat(sdCardPath, "/wiiu/apps/xash3DU/valve/");
+
 	Host_InitCommon( argc, argv, progname, bChangeGame );
 
 	WHBLogPrintf("1");
@@ -1212,21 +1219,34 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 	WHBLogPrintf("3");
     WHBLogConsoleDraw();
 
-	Cvar_Getf( "buildnum", FCVAR_READ_ONLY, "returns a current build number", "%i", Q_buildnum_compat());
-	Cvar_Getf( "ver", FCVAR_READ_ONLY, "shows an engine version", "%i/%s (hw build %i)", PROTOCOL_VERSION, XASH_COMPAT_VERSION, Q_buildnum_compat());
-	Cvar_Getf( "host_ver", FCVAR_READ_ONLY, "detailed info about this build", "%i " XASH_VERSION " %s %s %s", Q_buildnum(), Q_buildos(), Q_buildarch(), Q_buildcommit());
-	Cvar_Getf( "host_lowmemorymode", FCVAR_READ_ONLY, "indicates if engine compiled for low RAM consumption (0 - normal, 1 - low engine limits, 2 - low protocol limits)", "%i", XASH_LOW_MEMORY );
+	/*Cvar_Getf( "buildnum", FCVAR_READ_ONLY, "returns a current build number", "%i", 4529);
+	Cvar_Getf( "ver", FCVAR_READ_ONLY, "shows an engine version", "%i/%s (hw build %i)", PROTOCOL_VERSION, XASH_COMPAT_VERSION, 4529);
+	Cvar_Getf( "host_ver", FCVAR_READ_ONLY, "detailed info about this build", "%i " XASH_VERSION " %s %s %s", 4529, 4529, 4529, 1);
+	Cvar_Getf( "host_lowmemorymode", FCVAR_READ_ONLY, "indicates if engine compiled for low RAM consumption (0 - normal, 1 - low engine limits, 2 - low protocol limits)", "%i", false );*/
 
 	WHBLogPrintf("4");
     WHBLogConsoleDraw();
 
 	Mod_Init();
+	
+	WHBLogPrintf("5.1");
+    WHBLogConsoleDraw();
+
 	NET_Init();
+	
+	WHBLogPrintf("5.2");
+    WHBLogConsoleDraw();
+	
 	NET_InitMasters();
+	
+	WHBLogPrintf("5.3");
+    WHBLogConsoleDraw();
+	
 	Netchan_Init();
 	
-	WHBLogPrintf("5");
+	WHBLogPrintf("5.4");
     WHBLogConsoleDraw();
+	
 
 	// allow to change game from the console
 	if( pChangeGame != NULL )
@@ -1243,6 +1263,10 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
     WHBLogConsoleDraw();
 
 	SV_Init();
+	
+	WHBLogPrintf("7.1");
+    WHBLogConsoleDraw();
+	
 	CL_Init();
 
 	WHBLogPrintf("7");
@@ -1295,7 +1319,7 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 	}
 
 	host.change_game = false;	// done
-	Cmd_RemoveCommand( "setgl" );
+	//Cmd_RemoveCommand( "setgl" );
 	Cbuf_ExecStuffCmds();	// execute stuffcmds (commandline)
 	SCR_CheckStartupVids();	// must be last
 

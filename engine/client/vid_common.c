@@ -21,6 +21,19 @@ GNU General Public License for more details.
 #include "platform/platform.h"
 #include "ref_common.h"
 
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
+#endif
+
 static CVAR_DEFINE_AUTO( vid_mode, "0", FCVAR_RENDERINFO, "current video mode index (used only for storage)" );
 static CVAR_DEFINE_AUTO( vid_rotate, "0", FCVAR_RENDERINFO|FCVAR_VIDRESTART, "screen rotation (0-3)" );
 static CVAR_DEFINE_AUTO( vid_scale, "1.0", FCVAR_RENDERINFO|FCVAR_VIDRESTART, "pixel scale" );
@@ -201,22 +214,32 @@ static void VID_Mode_f( void )
 void VID_Init( void )
 {
 	// system screen width and height (don't suppose for change from console at all)
-	Cvar_RegisterVariable( &window_width );
-	Cvar_RegisterVariable( &window_height );
+	/*Cvar_RegisterVariable( &window_width );
+	Cvar_RegisterVariable( &window_height );*/
 
 	Cvar_RegisterVariable( &vid_mode );
 	Cvar_RegisterVariable( &vid_highdpi );
 	Cvar_RegisterVariable( &vid_rotate );
 	Cvar_RegisterVariable( &vid_scale );
-	Cvar_RegisterVariable( &vid_fullscreen );
-	Cvar_RegisterVariable( &vid_maximized );
-	Cvar_RegisterVariable( &window_xpos );
-	Cvar_RegisterVariable( &window_ypos );
+	//Cvar_RegisterVariable( &vid_fullscreen );
+	//Cvar_RegisterVariable( &vid_maximized );
+	//Cvar_RegisterVariable( &window_xpos );
+	//Cvar_RegisterVariable( &window_ypos );
 
 	// a1ba: planned to be named vid_mode for compability
 	// but supported mode list is filled by backends, so numbers are not portable any more
-	Cmd_AddRestrictedCommand( "vid_setmode", VID_Mode_f, "display video mode" );
+	//Cmd_AddRestrictedCommand( "vid_setmode", VID_Mode_f, "display video mode" );
+
+	WHBLogPrintf("left nut");
+    WHBLogConsoleDraw();
 
 	V_Init(); // init gamma
+
+	WHBLogPrintf("right nut");
+    WHBLogConsoleDraw();
+
 	Init(); // init renderer
+
+	WHBLogPrintf("pingas");
+    WHBLogConsoleDraw();
 }

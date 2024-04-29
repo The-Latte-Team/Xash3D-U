@@ -739,7 +739,13 @@ SCR_Init
 */
 void SCR_Init( void )
 {
+	WHBLogPrintf("pre return");
+    WHBLogConsoleDraw();
+
 	if( scr_init ) return;
+
+	WHBLogPrintf("real");
+    WHBLogConsoleDraw();
 
 	Cvar_RegisterVariable( &scr_centertime );
 	Cvar_RegisterVariable( &cl_levelshot_name );
@@ -754,20 +760,36 @@ void SCR_Init( void )
 	Cvar_RegisterVariable( &cl_showfps );
 	Cvar_RegisterVariable( &cl_showpos );
 
+	WHBLogPrintf("I can't unregister");
+    WHBLogConsoleDraw();
+
 	// register our commands
-	Cmd_AddCommand( "skyname", CL_SetSky_f, "set new skybox by basename" );
+	/*Cmd_AddCommand( "skyname", CL_SetSky_f, "set new skybox by basename" );
 	Cmd_AddCommand( "loadsky", CL_SetSky_f, "set new skybox by basename" );
 	Cmd_AddCommand( "viewpos", SCR_Viewpos_f, "prints current player origin" );
 	Cmd_AddCommand( "sizeup", SCR_SizeUp_f, "screen size up to 10 points" );
-	Cmd_AddCommand( "sizedown", SCR_SizeDown_f, "screen size down to 10 points" );
+	Cmd_AddCommand( "sizedown", SCR_SizeDown_f, "screen size down to 10 points" );*/
+
+	WHBLogPrintf("fuck those commands");
+    WHBLogConsoleDraw();
 
 	if( !UI_LoadProgs( ))
 	{
 		Con_Printf( S_ERROR "can't initialize gameui DLL: %s\n", COM_GetLibraryError() ); // there is non fatal for us
 		host.allow_console = true; // we need console, because menu is missing
+
+		WHBLogPrintf("no Ui??????????");
+    	WHBLogConsoleDraw();
 	}
 
+	WHBLogPrintf("damn");
+    WHBLogConsoleDraw();
+
 	SCR_VidInit();
+	
+	WHBLogPrintf("damn2");
+    WHBLogConsoleDraw();
+	
 	SCR_LoadCreditsFont ();
 	SCR_RegisterTextures ();
 	SCR_InstallParticlePalette ();

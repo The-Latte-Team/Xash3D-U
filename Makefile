@@ -34,7 +34,8 @@ include $(DEVKITPRO)/wut/share/wut_rules
 #-------------------------------------------------------------------------------
 TARGET		:=	Xash3DU
 BUILD		:=	build
-SOURCES		:=	engine/common \
+SOURCES		:=	include \
+				engine/common \
 				engine/common/imagelib \
 				engine/common/soundlib \
 				engine/common/soundlib/libmpg \
@@ -54,6 +55,7 @@ DATA		:=	data
 INCLUDES	:=	include/sys \
 				include/netinet \
 				include/arpa \
+				include \
 				engine \
 				engine/common \
 				engine/common/imagelib \

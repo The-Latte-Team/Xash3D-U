@@ -26,6 +26,7 @@ GNU General Public License for more details.
 #include <whb/sdcard.h>
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
+#include "cafe_utils.h"
 #endif
 
 // global image variables
@@ -248,13 +249,8 @@ static qboolean Image_ProbeLoadBuffer_( const loadpixformat_t *fmt, const char *
 
 static qboolean Image_ProbeLoadBuffer( const loadpixformat_t *fmt, const char *name, const byte *buf, size_t size, int override_hint )
 {
-	WHBLogPrintf("woah, new function to look at");
-    WHBLogConsoleDraw();
 	if( size <= 0 )
 		return false;
-
-	WHBLogPrintf("obvious");
-    WHBLogConsoleDraw();
 
 	// bruteforce all loaders
 	if( !fmt )
@@ -271,18 +267,6 @@ static qboolean Image_ProbeLoadBuffer( const loadpixformat_t *fmt, const char *n
 	return Image_ProbeLoadBuffer_( fmt, name, buf, size, override_hint );
 }
 
-void prepend(char* s, const char* t);
-
-/* Prepends t into s. Assumes s has enough space allocated
-** for the combined string.
-*/
-void prepend(char* s, const char* t)
-{
-    size_t len = strlen(t);
-    memmove(s + len, s, strlen(s) + 1);
-    memcpy(s, t, len);
-}
-
 static qboolean Image_ProbeLoad_( const loadpixformat_t *fmt, const char *name, const char *suffix, int override_hint )
 {
 	qboolean success = false;
@@ -295,29 +279,17 @@ static qboolean Image_ProbeLoad_( const loadpixformat_t *fmt, const char *name, 
 	prepend(path, sdPath);
 
 	//f = FS_LoadFile( path, &filesize, false );
-	WHBLogPrintf(path);
-    WHBLogConsoleDraw();
 
 	if( fptr = fopen( path, "rb" ) != NULL )
 	{
 		f = fptr;
-		WHBLogPrintf("now?");
-    	WHBLogConsoleDraw();
-
-		fseek(fptr, 0L, SEEK_END);
-		/*long int res = ftell(fptr);
-		filesize = res;*/
-		
-		WHBLogPrintf("what?");
-    	WHBLogConsoleDraw();
+		filesize = f;
 
 		success = Image_ProbeLoadBuffer( fmt, path, f, filesize, override_hint );
 
-		WHBLogPrintf("idiots");
-    	WHBLogConsoleDraw();
-		Mem_Free( fptr );
+		//Mem_Free( f );
 	}
-	fclose(fptr);
+	//fclose(fptr);
 
 	return success;
 }
