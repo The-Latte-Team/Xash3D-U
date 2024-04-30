@@ -33,6 +33,7 @@ GNU General Public License for more details.
 #include <coreinit/time.h>
 #include <whb/sdcard.h>
 #include "cafe_utils.h"
+#include "dll_cafe.h"
 
 #define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
 
@@ -118,6 +119,29 @@ int main(int argc, char **argv)
 
     bool displayed = false;
 
+    //char *sdCard = GetSDCardPath();
+
+    WHBLogPrintf( WHBGetSdCardMountPath() );
+	WHBLogConsoleDraw();
+    OSSleepTicks(OSMillisecondsToTicks(2500));
+
+    //char *modifiedSDCardPath = GetSDCardPath();
+    char *newSDCardPath = strcat(GetSDCardPath(), "/wiiu/apps/xash3DU/valve/");
+
+    WHBLogPrintf( GetSDCardPath() );
+	WHBLogConsoleDraw();
+    OSSleepTicks(OSMillisecondsToTicks(2500));
+
+    WHBLogPrintf( newSDCardPath );
+	WHBLogConsoleDraw();
+    OSSleepTicks(OSMillisecondsToTicks(2500));
+
+    /*WHBLogPrintf( sdCard );
+	WHBLogConsoleDraw();
+
+    WHBLogPrintf( modifiedSDCardPath );
+	WHBLogConsoleDraw();*/
+
     while (WHBProcIsRunning())
     {
         // Poll input
@@ -147,19 +171,12 @@ int main(int argc, char **argv)
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
 
-            OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
+            //TODO: Remove all the forced in delays so I could debug stuff
+            //OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
             //Launch the game
             //glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
-            
-            GetSDCardPath();
-	        modifiedSDCardPath = sdCard;
-
-            WHBLogPrintf( sdCard );
-	        WHBLogConsoleDraw();
-	        //OSSleepTicks(OSMillisecondsToTicks(1000));
-
 	        Sys_Start();
             
             displayed = true;

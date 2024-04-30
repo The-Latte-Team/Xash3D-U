@@ -13,8 +13,6 @@
 #include <coreinit/time.h>
 #endif
 
-char *sdCard;
-
 /* Prepends t into s. Assumes s has enough space allocated
 ** for the combined string.
 */
@@ -45,11 +43,8 @@ char *GetSDCardPath()
     if (!WHBMountSdCard())
 	    return NULL;
 
-    sdCard = WHBGetSdCardMountPath();
-
-    if (sdCard == NULL)
+    if (WHBGetSdCardMountPath() == NULL)
         return NULL;
-	strcat(sdCard, "/wiiu/apps/xash3DU/valve/");
 
-    return sdCard;
+    return WHBGetSdCardMountPath();
 }

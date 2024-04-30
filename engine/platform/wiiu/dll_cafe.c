@@ -11,6 +11,14 @@ GNU General Public License for more details.
 
 #include "common.h"
 #include "dll_cafe.h"
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <whb/sdcard.h>
+#include <coreinit/thread.h>
+#include "cafe_utils.h"
 
 typedef struct dll_s
 {
@@ -22,6 +30,7 @@ typedef struct dll_s
 
 static dll_t *dll_list;
 static char *dll_err = NULL;
+char *dllSdCardPath;
 
 static void *dlfind( const char *name )
 {
@@ -43,7 +52,14 @@ static const char *dlname( void *handle )
 
 void *dlopen( const char *name, int flag )
 {
-	printf("dlopen: %s\n", name);
+	dllSdCardPath = GetSDCardPath();
+    strcat(dllSdCardPath, "cl_dlls/");
+
+	prepend(name, dllSdCardPath);
+	WHBLogPrintf("dlopen: %s\n", name);
+    WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
+
 	dll_t *d = dlfind( name );
 	if( d ) d->refcnt++;
 	else dll_err = "dlopen(): unknown dll name"; 

@@ -3188,7 +3188,8 @@ void CL_Init( void )
 	WHBLogPrintf("pwease");
     WHBLogConsoleDraw();
 
-	S_Init();	// init sound
+	//TODO: Fix whatever makes the game crash while loading sound; I just want to boot to the main menu at least :(
+	//S_Init();	// init sound
 
 	WHBLogPrintf("im lonle");
     WHBLogConsoleDraw();
@@ -3196,14 +3197,25 @@ void CL_Init( void )
 	//Voice_Init( VOICE_DEFAULT_CODEC, 3, true ); // init voice (do not open the device)
 
 	// unreliable buffer. unsed for unreliable commands and voice stream
-	MSG_Init( &cls.datagram, "cls.datagram", cls.datagram_buf, sizeof( cls.datagram_buf ));
+	//MSG_Init( &cls.datagram, "cls.datagram", cls.datagram_buf, sizeof( cls.datagram_buf ));
 
+	WHBLogPrintf("iwonder");
+    WHBLogConsoleDraw();
 	// IN_TouchInit();
 
 	COM_GetCommonLibraryPath( LIBRARY_CLIENT, libpath, sizeof( libpath ));
 
-	if( !CL_LoadProgs( libpath ) )
-		Host_Error( "can't initialize %s: %s\n", libpath, COM_GetLibraryError() );
+	WHBLogPrintf("where it might be crashing");
+    WHBLogConsoleDraw();
+
+	if( !CL_LoadProgs( libpath ) ){
+		WHBLogPrintf("can't initialize %s: %s\n", libpath, COM_GetLibraryError());
+    	WHBLogConsoleDraw();
+		Host_Error( "can't initialize %s: %s\n", libpath, COM_GetLibraryError() ); //Won't print, text above will, better do it like this to keep Xash3D's debug system
+	}
+
+	WHBLogPrintf("idfk");
+    WHBLogConsoleDraw();
 
 	cls.initialized = true;
 	cl.maxclients = 1; // allow to drawing player in menu

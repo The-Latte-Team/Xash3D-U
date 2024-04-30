@@ -31,7 +31,7 @@ typedef struct
 } glwstate_t;
 
 extern glwstate_t glw_state;
-extern char *modifiedSDCardPath;
+//char *modifiedSDCardPath;
 
 #define VID_MIN_HEIGHT 200
 #define VID_MIN_WIDTH 320
