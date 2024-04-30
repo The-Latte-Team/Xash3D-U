@@ -34,6 +34,8 @@ GNU General Public License for more details.
 #include <whb/sdcard.h>
 #include "cafe_utils.h"
 #include "dll_cafe.h"
+#include <SDL.h>
+#include "SDL_audio.h"
 
 #define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
 
@@ -119,29 +121,6 @@ int main(int argc, char **argv)
 
     bool displayed = false;
 
-    //char *sdCard = GetSDCardPath();
-
-    WHBLogPrintf( WHBGetSdCardMountPath() );
-	WHBLogConsoleDraw();
-    OSSleepTicks(OSMillisecondsToTicks(2500));
-
-    //char *modifiedSDCardPath = GetSDCardPath();
-    char *newSDCardPath = strcat(GetSDCardPath(), "/wiiu/apps/xash3DU/valve/");
-
-    WHBLogPrintf( GetSDCardPath() );
-	WHBLogConsoleDraw();
-    OSSleepTicks(OSMillisecondsToTicks(2500));
-
-    WHBLogPrintf( newSDCardPath );
-	WHBLogConsoleDraw();
-    OSSleepTicks(OSMillisecondsToTicks(2500));
-
-    /*WHBLogPrintf( sdCard );
-	WHBLogConsoleDraw();
-
-    WHBLogPrintf( modifiedSDCardPath );
-	WHBLogConsoleDraw();*/
-
     while (WHBProcIsRunning())
     {
         // Poll input
@@ -179,10 +158,11 @@ int main(int argc, char **argv)
 	        szArgv = argv;
 	        Sys_Start();
             
-            displayed = true;
             WHBLogPrintf("If we're here, game didn't load");
             WHBLogConsoleDraw();
+            displayed = true;
             break;
+            exit(0);
         }
     }
 

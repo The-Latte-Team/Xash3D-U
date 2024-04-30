@@ -1185,12 +1185,6 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 
 	pChangeGame = func;	// may be NULL
 
-	sdCard = GetSDCardPath();
-
-	WHBLogPrintf( sdCard );
-	WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000));
-
 	Host_InitCommon( argc, argv, progname, bChangeGame );
 
 	WHBLogPrintf("1");
@@ -1348,6 +1342,24 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 		Cbuf_AddTextf( "exec %s\n", Cvar_VariableString( "servercfgfile" ));
 		Cbuf_Execute();
 	}
+
+	//Valve intro shit
+	SDL_Init(SDL_INIT_AUDIO);
+
+    SDL_AudioSpec wavSpec;
+    Uint32 wavLength;
+    Uint8 *wavBuffer;
+    
+    SDL_LoadWAV("wiiu/apps/xash3DU/valve.wav", &wavSpec, &wavBuffer, &wavLength);
+    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+
+    int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+    SDL_PauseAudioDevice(deviceId, 0);
+
+    OSSleepTicks(OSMillisecondsToTicks(10000));
+
+    SDL_CloseAudioDevice(deviceId);
+    SDL_FreeWAV(wavBuffer);
 
 	// main window message loop
 	while( !host.crashed )

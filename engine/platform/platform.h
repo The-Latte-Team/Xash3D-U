@@ -105,7 +105,7 @@ static inline void Platform_Init( void )
 {
 #if XASH_POSIX
 	// daemonize as early as possible, because we need to close our file descriptors
-	Posix_Daemonize( );
+	//Posix_Daemonize( );
 #endif
 
 #if XASH_SDL

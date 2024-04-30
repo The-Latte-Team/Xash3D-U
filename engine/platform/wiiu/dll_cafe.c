@@ -30,7 +30,6 @@ typedef struct dll_s
 
 static dll_t *dll_list;
 static char *dll_err = NULL;
-char *dllSdCardPath;
 
 static void *dlfind( const char *name )
 {
@@ -52,10 +51,9 @@ static const char *dlname( void *handle )
 
 void *dlopen( const char *name, int flag )
 {
-	dllSdCardPath = GetSDCardPath();
-    strcat(dllSdCardPath, "cl_dlls/");
+	prepend(name, "wiiu/apps/xash3DU/valve/cl_dlls/");
+	strcat(name, ".so");
 
-	prepend(name, dllSdCardPath);
 	WHBLogPrintf("dlopen: %s\n", name);
     WHBLogConsoleDraw();
 	OSSleepTicks(OSMillisecondsToTicks(1000));
