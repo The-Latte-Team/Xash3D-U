@@ -34,6 +34,7 @@ GNU General Public License for more details.
 #include <whb/sdcard.h>
 #include "cafe_utils.h"
 #include "dll_cafe.h"
+
 #include <SDL.h>
 #include "SDL_audio.h"
 
@@ -150,12 +151,19 @@ int main(int argc, char **argv)
             WHBLogPrintf("Loading game...");
             WHBLogConsoleDraw();
 
-            //TODO: Remove all the forced in delays so I could debug stuff
-            //OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
+            OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
             //Launch the game
             //glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
+            
+            GetSDCardPath();
+	        modifiedSDCardPath = sdCard;
+
+            WHBLogPrintf( sdCard );
+	        WHBLogConsoleDraw();
+	        //OSSleepTicks(OSMillisecondsToTicks(1000));
+
 	        Sys_Start();
             
             WHBLogPrintf("If we're here, game didn't load");

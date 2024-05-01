@@ -81,7 +81,6 @@ static CVAR_DEFINE( host_sleeptime, "sleeptime", "1", FCVAR_ARCHIVE|FCVAR_FILTER
 static CVAR_DEFINE_AUTO( host_sleeptime_debug, "0", 0, "print sleeps between frames" );
 CVAR_DEFINE( con_gamemaps, "con_mapfilter", "1", FCVAR_ARCHIVE, "when true show only maps in game folder" );
 
-char *sdCard;
 static void Sys_PrintUsage( void )
 {
 	string version_str;
@@ -1184,6 +1183,10 @@ int EXPORT Host_Main( int argc, char **argv, const char *progname, int bChangeGa
 	host.starttime = Sys_DoubleTime();
 
 	pChangeGame = func;	// may be NULL
+
+	WHBLogPrintf( sdCard );
+	WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	Host_InitCommon( argc, argv, progname, bChangeGame );
 

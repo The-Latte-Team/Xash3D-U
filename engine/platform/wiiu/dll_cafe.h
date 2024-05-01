@@ -20,7 +20,6 @@ typedef struct Dl_info_s
 	const char *dli_sname;
 	const void *dli_saddr;
 } Dl_info;
-extern char* dllSdCardPath;
 
 void *dlsym(void *handle, const char *symbol );
 void *dlopen(const char *name, int flag );

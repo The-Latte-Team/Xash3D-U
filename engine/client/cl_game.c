@@ -31,19 +31,6 @@ GNU General Public License for more details.
 #include "platform/platform.h"
 #include "ref_common.h"
 
-#if XASH_WIIU
-#include <vpad/input.h>
-#include <coreinit/screen.h>
-#include <coreinit/cache.h>
-#include <whb/proc.h>
-#include <whb/log_console.h>
-#include <whb/log.h>
-#include <coreinit/thread.h>
-#include <whb/sdcard.h>
-#include <coreinit/time.h>
-#include "cafe_utils.h"
-#endif
-
 #define MAX_LINELENGTH	80
 #define MAX_TEXTCHANNELS	8		// must be power of two (GoldSrc uses 4 channels)
 #define TEXT_MSGNAME	"TextMessage%i"
@@ -3988,18 +3975,12 @@ qboolean CL_LoadProgs( const char *name )
 
 	if( clgame.hInstance ) CL_UnloadProgs();
 
-	WHBLogPrintf("YAY");
-    WHBLogConsoleDraw();
-
 	// initialize PlayerMove
 	clgame.pmove = &gpMove;
 
 	cls.mempool = Mem_AllocPool( "Client Static Pool" );
 	clgame.mempool = Mem_AllocPool( "Client Edicts Zone" );
 	clgame.entities = NULL;
-
-	WHBLogPrintf("NEW FUNCTION");
-    WHBLogConsoleDraw();
 
 
 	// a1ba: we need to check if client.dll has direct dependency on SDL2
@@ -4019,58 +4000,33 @@ qboolean CL_LoadProgs( const char *name )
 	clgame.client_dll_uses_sdl = true;
 #endif
 
-	WHBLogPrintf("TO TRY");
-    WHBLogConsoleDraw();
-
 	// NOTE: important stuff!
 	// vgui must startup BEFORE loading client.dll to avoid get error ERROR_NOACESS
 	// during LoadLibrary
-
-	//Apparently vgui support is a no-no
-	/*if( !GI->internal_vgui_support && VGui_LoadProgs( NULL ))
+	if( !GI->internal_vgui_support && VGui_LoadProgs( NULL ))
 	{
-		WHBLogPrintf("oh it's here?");
-    	WHBLogConsoleDraw();
-
 		VGui_Startup( refState.width, refState.height );
 	}
 	else
 	{
-		WHBLogPrintf("nah, there's no vgui support I bet");
-    	WHBLogConsoleDraw();
 		// we failed to load vgui_support, but let's probe client.dll for support anyway
 		GI->internal_vgui_support = true;
-	}*/
-
-	WHBLogPrintf("AND DEBUG");
-    WHBLogConsoleDraw();
+	}
 
 	clgame.hInstance = COM_LoadLibrary( name, false, false );
-
-	WHBLogPrintf("I swear if it's cuz COM_LoadLibrary");
-    WHBLogConsoleDraw();
 
 	if( !clgame.hInstance )
 		return false;
 
-	WHBLogPrintf("no; never load client lmfao");
-    WHBLogConsoleDraw();
-
 	// delayed vgui initialization for internal support
-	/*if( GI->internal_vgui_support && VGui_LoadProgs( clgame.hInstance ))
+	if( GI->internal_vgui_support && VGui_LoadProgs( clgame.hInstance ))
 	{
 		VGui_Startup( refState.width, refState.height );
-	}*/
-
-	WHBLogPrintf("no vgui? lmfao");
-    WHBLogConsoleDraw();
+	}
 
 	// clear exports
 	for( func = cdll_exports; func && func->name; func++ )
 		*func->func = NULL;
-
-	WHBLogPrintf("goddamn");
-    WHBLogConsoleDraw();
 
 	// trying to get single export
 	if(( GetClientAPI = (void *)COM_GetProcAddress( clgame.hInstance, "GetClientAPI" )) != NULL )

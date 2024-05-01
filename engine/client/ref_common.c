@@ -32,8 +32,6 @@ CVAR_DEFINE_AUTO( r_showtree, "0", FCVAR_ARCHIVE, "build the graph of visible BS
 static CVAR_DEFINE_AUTO( r_refdll, "soft", FCVAR_RENDERINFO, "choose renderer implementation, if supported" );
 static CVAR_DEFINE_AUTO( r_refdll_loaded, "", FCVAR_READ_ONLY, "currently loaded renderer" );
 
-char *sdCardPath;
-
 // there is no need to expose whole host and cl structs into the renderer
 // but we still need to update timings accurately as possible
 // this looks horrible but the only other option would be passing four
@@ -597,12 +595,6 @@ convar_t	*cl_himodels;
 
 qboolean Init( void )
 {
-	/*sdCardPath = WHBGetSdCardMountPath();
-
-	WHBLogPrintf(sdCardPath);
-    WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000));*/
-
 	qboolean success = false;
 	string requested;
 
