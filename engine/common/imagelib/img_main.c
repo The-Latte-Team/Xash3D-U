@@ -32,8 +32,6 @@ GNU General Public License for more details.
 // global image variables
 imglib_t	image;
 
-const char *sdPath;
-
 typedef struct suffix_s
 {
 	const char	*suf;
@@ -237,9 +235,6 @@ static const loadpixformat_t *Image_GetLoadFormatForExtension( const char *ext )
 
 static qboolean Image_ProbeLoadBuffer_( const loadpixformat_t *fmt, const char *name, const byte *buf, size_t size, int override_hint )
 {
-	WHBLogPrintf("is it cuz of this?");
-    WHBLogConsoleDraw();
-
 	if( override_hint > 0 )
 		image.hint = override_hint;
 	else image.hint = fmt->hint;
@@ -276,14 +271,26 @@ static qboolean Image_ProbeLoad_( const loadpixformat_t *fmt, const char *name, 
 	FILE *fptr;
 
 	Q_snprintf( path, sizeof( path ), fmt->formatstring, name, suffix, fmt->ext );
+	WHBLogPrintf(path);
+    WHBLogConsoleDraw();
+
 	prepend(path, "/vol/external01/wiiu/apps/xash3DU/valve/");
+
+	WHBLogPrintf(path);
+    WHBLogConsoleDraw();
 
 	//f = FS_LoadFile( path, &filesize, false );
 
+	
 	if( fptr = fopen( path, "rb" ) != NULL )
 	{
+		WHBLogPrintf("it doesn't open orrrrrr?");
+    	WHBLogConsoleDraw();
 		f = fptr;
 		filesize = f;
+
+		WHBLogPrintf("you ded");
+    	WHBLogConsoleDraw();
 
 		success = Image_ProbeLoadBuffer( fmt, path, f, filesize, override_hint );
 
@@ -320,9 +327,6 @@ loading and unpack to rgba any known image
 */
 rgbdata_t *FS_LoadImage( const char *filename, const byte *buffer, size_t size )
 {
-	sdPath = WHBGetSdCardMountPath();
-	strcat(sdPath, "/wiiu/apps/xash3DU/valve/");
-
 	const char	*ext = COM_FileExtension( filename );
 	string		loadname;
 	int		i;

@@ -12,14 +12,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
-#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
-#endif
 #include "platform/platform.h"
-#if XASH_LIB == LIB_POSIX
-#ifdef XASH_IRIX
-#include "platform/irix/dladdr.h"
-#endif
+#include "dll_cafe.h"
+
 #include "common.h"
 #include "lib_common.h"
 #include "filesystem.h"
@@ -27,6 +23,20 @@ GNU General Public License for more details.
 #include "platform/android/lib_android.h"
 #include "platform/emscripten/lib_em.h"
 #include "platform/apple/lib_ios.h"
+
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <coreinit/time.h>
+#include <whb/sdcard.h>
+#include "cafe_utils.h"
+#include "dll_cafe.h"
+#endif
 
 #ifdef XASH_DLL_LOADER // wine-based dll loader
 void * Loader_LoadLibrary (const char *name);
@@ -82,7 +92,6 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 {
 	dll_user_t *hInst = NULL;
 	void *pHandle = NULL;
-	char buf[MAX_VA_STRING];
 
 	COM_ResetLibraryError();
 
@@ -107,12 +116,11 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 		// try to find by linker(LD_LIBRARY_PATH, DYLD_LIBRARY_PATH, LD_32_LIBRARY_PATH and so on...)
 		if( !pHandle )
 		{
-			pHandle = dlopen( dllname, RTLD_NOW );
+			pHandle = dlopen( dllname, RTLD_LAZY );
 			if( pHandle )
 				return pHandle;
 
-			Q_snprintf( buf, sizeof( buf ), "Failed to find library %s", dllname );
-			COM_PushLibraryError( buf );
+			COM_PushLibraryError( va( "Failed to find library %s", dllname ));
 			COM_PushLibraryError( dlerror() );
 			return NULL;
 		}
@@ -120,8 +128,7 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 
 	if( hInst->custom_loader )
 	{
-		Q_snprintf( buf, sizeof( buf ), "Custom library loader is not available. Extract library %s and fix gameinfo.txt!", hInst->fullPath );
-		COM_PushLibraryError( buf );
+		COM_PushLibraryError( va( "Custom library loader is not available. Extract library %s and fix gameinfo.txt!", hInst->fullPath ));
 		Mem_Free( hInst );
 		return NULL;
 	}
@@ -131,16 +138,14 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 	{
 		if( hInst->encrypted )
 		{
-			Q_snprintf( buf, sizeof( buf ), "Library %s is encrypted. Cannot load", hInst->shortPath );
-			COM_PushLibraryError( buf );
+			COM_PushLibraryError( va( "Library %s is encrypted. Cannot load", hInst->shortPath ) );
 			Mem_Free( hInst );
 			return NULL;
 		}
 
 		if( !( hInst->hInstance = Loader_LoadLibrary( hInst->fullPath ) ) )
 		{
-			Q_snprintf( buf, sizeof( buf ), "Failed to load DLL with DLL loader: %s", hInst->shortPath );
-			COM_PushLibraryError( buf );
+			COM_PushLibraryError( va( "Failed to load DLL with DLL loader: %s", hInst->shortPath ) );
 			Mem_Free( hInst );
 			return NULL;
 		}
@@ -148,7 +153,7 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 	else
 #endif
 	{
-		if( !( hInst->hInstance = dlopen( hInst->fullPath, RTLD_NOW ) ) )
+		if( !( hInst->hInstance = dlopen( hInst->fullPath, RTLD_LAZY ) ) )
 		{
 			COM_PushLibraryError( dlerror() );
 			Mem_Free( hInst );
@@ -197,12 +202,50 @@ void *COM_GetProcAddress( void *hInstance, const char *name )
 
 void *COM_FunctionFromName( void *hInstance, const char *pName )
 {
-	return COM_GetProcAddress( hInstance, pName );
+	void *function;
+	if( !( function = COM_GetProcAddress( hInstance, pName ) ) )
+	{
+		Con_Reportf( S_ERROR "FunctionFromName: Can't get symbol %s: %s\n", pName, dlerror());
+	}
+	return function;
 }
+
+#ifdef XASH_DYNAMIC_DLADDR
+static int d_dladdr( void *sym, Dl_info *info )
+{
+	static int (*dladdr_real) ( void *sym, Dl_info *info );
+
+	if( !dladdr_real )
+		dladdr_real = dlsym( (void*)(size_t)(-1), "dladdr" );
+
+	memset( info, 0, sizeof( *info ) );
+
+	if( !dladdr_real )
+		return -1;
+
+	return dladdr_real(  sym, info );
+}
+#define dladdr d_dladdr
+#endif
 
 const char *COM_NameForFunction( void *hInstance, void *function )
 {
+#ifdef XASH_DLL_LOADER
+	void *wm;
+	if( host.enabledll && (wm = Loader_GetDllHandle( hInstance )) )
+		return Loader_GetFuncName_int(wm, function);
+	else
+#endif
+	// NOTE: dladdr() is a glibc extension
+	{
+		Dl_info info = {0};
+		dladdr((void*)function, &info);
+		if(info.dli_sname)
+			return info.dli_sname;
+	}
+#ifdef XASH_ALLOW_SAVERESTORE_OFFSETS
+	return COM_OffsetNameForFunction( function );
+#else
 	return NULL;
+#endif
 }
-
-#endif // _WIN32

@@ -34,6 +34,7 @@ GNU General Public License for more details.
 #include <whb/sdcard.h>
 #include "cafe_utils.h"
 #include "dll_cafe.h"
+#include "crtlib.h"
 
 #include <SDL.h>
 #include "SDL_audio.h"
@@ -57,6 +58,8 @@ GNU General Public License for more details.
 #if XASH_WIN32
 #error "Single-binary or dedicated builds aren't supported for Windows!"
 #endif
+
+#undef XASH_DLL_LOADER
 
 static char        szGameDir[128]; // safe place to keep gamedir
 static int         szArgc;
@@ -103,12 +106,12 @@ int main(int argc, char **argv)
     /*SDL_Window *win = NULL;
 	SDL_Renderer *renderer = NULL;
 	SDL_Texture *img = NULL;
-	int w, h;
+	int w, h;*/
 
     //Valve intro shit
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-    win = SDL_CreateWindow("n/a", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN );
+    /*win = SDL_CreateWindow("n/a", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN ); //What if
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
 
     SDL_AudioSpec wavSpec;
@@ -139,11 +142,11 @@ int main(int argc, char **argv)
     }
 
     bool displayed = false;
-    bool playedAudio = false;
+    /*bool playedAudio = false;
 
     int freakingAlpha = 0;
     bool fadeIn = true;
-    bool fadeOut = false;
+    bool fadeOut = false;*/
 
     while (WHBProcIsRunning())
     {
@@ -217,19 +220,22 @@ int main(int argc, char **argv)
 
         if (vpad_fatal) break;
 
+        char *valveSDCardPath;
         if(valveFolderAvailable && !displayed){
-            chdir(WHBGetSdCardMountPath());
+            valveSDCardPath = WHBGetSdCardMountPath();
+            Q_strncpy(valveSDCardPath, "/wiiu/apps/xash3DU/valve/", sizeof( valveSDCardPath ));
+            chdir(valveSDCardPath);
+
             //Launch the game
             //glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
-	    Sys_Start();
+	        Sys_Start();
 
 
             WHBLogPrintf("If we're here, game didn't load");
             WHBLogConsoleDraw();
             displayed = true;
-
             //break; do not
             //exit(0);
         }

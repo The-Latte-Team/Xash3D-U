@@ -1035,7 +1035,7 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 			host.rootdir[0] = 0;
 		}
 #elif XASH_WIIU
-		Q_strncpy( host.rootdir, "vol/external01/wiiu/apps/xash3DU", sizeof(host.rootdir) );
+		Q_strncpy( host.rootdir, "/vol/external01/wiiu/apps/xash3DU/", sizeof(host.rootdir) );
 #elif (XASH_SDL == 2) && !XASH_NSWITCH && !XASH_WIIU // GetBasePath not impl'd in switch-sdl2
 		char *szBasePath = SDL_GetBasePath();
 		if( szBasePath )
@@ -1131,7 +1131,7 @@ static void Host_InitCommon( int argc, char **argv, const char *progname, qboole
 	//FS_LoadGameInfo( NULL );
 	Cvar_PostFSInit();
 
-	Q_strncpy( host.rootdir, "vol/external01/wiiu/apps/xash3DU/valve", sizeof( host.rootdir ));
+	Q_strncpy( host.rootdir, "/vol/external01/wiiu/apps/xash3DU/valve", sizeof( host.rootdir ));
 
 	Q_strncpy( "valve.rc", SI.basedirName, sizeof( "valve.rc" ));
 
