@@ -46,9 +46,7 @@ SOURCES		:=	include \
 				engine/platform/wiiu/launcher \
 				engine/platform/wiiu \
 				engine/platform/sdl \
-				engine/platform/posix \
 				engine/platform/stub \
-				engine/platform/misc \
 				public \
 				ref/soft
 DATA		:=	data
@@ -74,9 +72,7 @@ INCLUDES	:=	include/sys \
 				engine/platform/wiiu \
 				engine/platform/wiiu/sdl2 \
 				engine/platform/sdl \
-				engine/platform/misc \
 				engine/platform/stub \
-				engine/platform/posix \
 				engine/platform/ \
 				public \
 				3rdparty/mainui \

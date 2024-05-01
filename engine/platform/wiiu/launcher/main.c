@@ -37,12 +37,10 @@ GNU General Public License for more details.
 
 #include <SDL.h>
 #include "SDL_audio.h"
+#include <SDL2/SDL_image.h>
 
 #define HOMEBREW_APP_PATH "wiiu/apps/xash3DU"
 
-#if XASH_SDLMAIN
-#include <SDL.h>
-#endif
 #if XASH_EMSCRIPTEN
 #include <emscripten.h>
 #endif
@@ -82,7 +80,7 @@ static int Sys_Start( void )
 
 	Q_strncpy( szGameDir, game, sizeof( szGameDir ));
 
-    WHBLogPrintf("Launching game...");
+    WHBLogPrintf("Loading game...");
     WHBLogConsoleDraw();
 
 	return Host_Main( szArgc, szArgv, game, 0, Sys_ChangeGame );
@@ -101,6 +99,26 @@ int main(int argc, char **argv)
     VPADStatus status;
     VPADReadError error;
     bool vpad_fatal = false;
+
+    /*SDL_Window *win = NULL;
+	SDL_Renderer *renderer = NULL;
+	SDL_Texture *img = NULL;
+	int w, h;
+
+    //Valve intro shit
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+
+    win = SDL_CreateWindow("n/a", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN );
+    renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
+
+    SDL_AudioSpec wavSpec;
+    Uint32 wavLength;
+    Uint8 *wavBuffer;
+    
+    SDL_LoadWAV("wiiu/apps/xash3DU/valve.wav", &wavSpec, &wavBuffer, &wavLength);
+    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+
+    int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);*/
 
     bool valveFolderAvailable = false;
     
@@ -121,9 +139,61 @@ int main(int argc, char **argv)
     }
 
     bool displayed = false;
+    bool playedAudio = false;
+
+    int freakingAlpha = 0;
+    bool fadeIn = true;
+    bool fadeOut = false;
 
     while (WHBProcIsRunning())
     {
+        /*img = IMG_LoadTexture(renderer, "wiiu/apps/xash3DU/valve.png");
+	    SDL_QueryTexture(img, NULL, NULL, &w, &h);
+
+	    SDL_Rect texr; 
+        texr.x = (1280 - w) / 2;
+        texr.y = (720 - h) / 2;
+        texr.w = w;
+        texr.h = h;
+        if(fadeIn && !fadeOut){
+            if(freakingAlpha < 255){
+                freakingAlpha += 0.01;
+            }
+            else if(freakingAlpha >= 255){
+                freakingAlpha == 255;
+                SDL_Delay(6500);
+                fadeIn = false;
+                fadeOut = true;
+            }
+        }
+        if(fadeOut && !fadeIn){
+            freakingAlpha -= 0.01;
+        }
+
+        if (img) {
+            // Set the alpha of the texture
+            SDL_SetTextureAlphaMod(img, freakingAlpha);
+        }
+
+        SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, img, NULL, &texr);
+		SDL_RenderPresent(renderer);
+
+        if(!playedAudio){
+            SDL_PauseAudioDevice(deviceId, 0);
+
+            SDL_Delay(10000);
+
+            SDL_CloseAudioDevice(deviceId);
+            SDL_FreeWAV(wavBuffer);
+            playedAudio = true;
+
+            SDL_SetTextureAlphaMod(img, 0x00);
+            SDL_DestroyTexture(img);
+            WHBLogPrintf(" real");
+            WHBLogConsoleDraw();
+        }*/
+
         // Poll input
         VPADRead(VPAD_CHAN_0, &status, 1, &error);
         switch (error) {
@@ -148,29 +218,20 @@ int main(int argc, char **argv)
         if (vpad_fatal) break;
 
         if(valveFolderAvailable && !displayed){
-            WHBLogPrintf("Loading game...");
-            WHBLogConsoleDraw();
-
-            OSSleepTicks(OSMillisecondsToTicks(2500)); //Wait before game launches
+            chdir(WHBGetSdCardMountPath());
             //Launch the game
             //glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
-            
-            GetSDCardPath();
-	        modifiedSDCardPath = sdCard;
+	    Sys_Start();
 
-            WHBLogPrintf( sdCard );
-	        WHBLogConsoleDraw();
-	        //OSSleepTicks(OSMillisecondsToTicks(1000));
 
-	        Sys_Start();
-            
             WHBLogPrintf("If we're here, game didn't load");
             WHBLogConsoleDraw();
             displayed = true;
-            break;
-            exit(0);
+
+            //break; do not
+            //exit(0);
         }
     }
 

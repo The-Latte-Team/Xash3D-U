@@ -3204,10 +3204,16 @@ void CL_Init( void )
 	COM_GetCommonLibraryPath( LIBRARY_CLIENT, libpath, sizeof( libpath ));
 
 	WHBLogPrintf("am I???? (Please don't be the Library Client Path)");
-    WHBLogConsoleDraw();
+	WHBLogPrintf(libpath);
 
-	if( !CL_LoadProgs( libpath ) )
+    WHBLogConsoleDraw();
+	OSSleepTicks(OSMillisecondsToTicks(3000));
+
+	if( !CL_LoadProgs( libpath ) ){
+		WHBLogPrintf("can't initialize %s: %s\n", libpath, COM_GetLibraryError());
+    	WHBLogConsoleDraw();
 		Host_Error( "can't initialize %s: %s\n", libpath, COM_GetLibraryError() );
+	}
 
 	cls.initialized = true;
 	cl.maxclients = 1; // allow to drawing player in menu

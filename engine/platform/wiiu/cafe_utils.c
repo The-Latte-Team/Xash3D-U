@@ -45,11 +45,10 @@ char *GetSDCardPath()
     if (!WHBMountSdCard())
 	    return NULL;
 
-    sdCard = WHBGetSdCardMountPath();
+    WHBGetSdCardMountPath();
 
-    if (sdCard == NULL)
+    if (WHBGetSdCardMountPath() == NULL)
         return NULL;
-	strcat(sdCard, "/wiiu/apps/xash3DU/valve/");
 
-    return sdCard;
+    return WHBGetSdCardMountPath();
 }

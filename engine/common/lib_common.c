@@ -21,6 +21,16 @@ GNU General Public License for more details.
 
 #if XASH_WIIU
 #include "dll_cafe.h"
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
 #endif
 
 static char s_szLastError[1024] = "";
@@ -132,7 +142,7 @@ dll_user_t *FS_FindLibrary( const char *dllname, qboolean directpath )
 
 static void COM_GenerateCommonLibraryName( const char *name, const char *ext, char *out, size_t size )
 {
-#if ( XASH_WIN32 || XASH_LINUX || XASH_APPLE ) && XASH_X86
+#if ( XASH_WIN32 || XASH_LINUX || XASH_APPLE ) && XASH_X86 || XASH_WIIU
 	Q_snprintf( out, size, "%s.%s", name, ext );
 #elif ( XASH_WIN32 || XASH_LINUX || XASH_APPLE )
 	Q_snprintf( out, size, "%s_%s.%s", name, Q_buildarch(), ext );
@@ -155,8 +165,11 @@ static void COM_GenerateClientLibraryPath( const char *name, char *out, size_t s
 #else
 	string dllpath;
 
+	WHBLogPrintf("dll path gets fucked Ig?");
+    WHBLogConsoleDraw();
+
 	// we don't have any library prefixes, so we can safely append dll_path here
-	Q_snprintf( dllpath, sizeof( dllpath ), "%s/%s", GI->dll_path, name );
+	Q_snprintf( dllpath, sizeof( dllpath ), "%s/%s", "wiiu/apps/xash3DU/valve/cl_dlls", name );
 
 	COM_GenerateCommonLibraryName( dllpath, OS_LIB_EXT, out, size );
 #endif
@@ -235,14 +248,15 @@ void COM_GetCommonLibraryPath( ECommonLibraryType eLibType, char *out, size_t si
 		COM_GenerateClientLibraryPath( "menu", out, size );
 		break;
 	case LIBRARY_CLIENT:
-		if( SI.clientlib[0] )
-		{
-			Q_strncpy( out, SI.clientlib, size );
-		}
-		else
+		/*if( SI.clientlib[0] )
 		{
 			COM_GenerateClientLibraryPath( "client", out, size );
+			//Q_strncpy( out, SI.clientlib, size );
 		}
+		else
+		{*/
+			COM_GenerateClientLibraryPath( "client", out, size );
+		//}
 		break;
 	case LIBRARY_SERVER:
 		if( SI.gamedll[0] )

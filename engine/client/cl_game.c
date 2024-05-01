@@ -31,6 +31,19 @@ GNU General Public License for more details.
 #include "platform/platform.h"
 #include "ref_common.h"
 
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
+#endif
+
 #define MAX_LINELENGTH	80
 #define MAX_TEXTCHANNELS	8		// must be power of two (GoldSrc uses 4 channels)
 #define TEXT_MSGNAME	"TextMessage%i"
@@ -3951,8 +3964,8 @@ void CL_UnloadProgs( void )
 	if( Q_stricmp( GI->gamefolder, "hlfx" ) || GI->version != 0.5f )
 		clgame.dllFuncs.pfnShutdown();
 
-	if( GI->internal_vgui_support )
-		VGui_Shutdown();
+	/*if( GI->internal_vgui_support )
+		VGui_Shutdown();*/
 
 	Cvar_FullSet( "cl_background", "0", FCVAR_READ_ONLY );
 	Cvar_FullSet( "host_clientloaded", "0", FCVAR_READ_ONLY );
@@ -4003,7 +4016,8 @@ qboolean CL_LoadProgs( const char *name )
 	// NOTE: important stuff!
 	// vgui must startup BEFORE loading client.dll to avoid get error ERROR_NOACESS
 	// during LoadLibrary
-	if( !GI->internal_vgui_support && VGui_LoadProgs( NULL ))
+	//GI->internal_vgui_support = false;
+	/*if( !GI->internal_vgui_support && VGui_LoadProgs( NULL ))
 	{
 		VGui_Startup( refState.width, refState.height );
 	}
@@ -4011,18 +4025,30 @@ qboolean CL_LoadProgs( const char *name )
 	{
 		// we failed to load vgui_support, but let's probe client.dll for support anyway
 		GI->internal_vgui_support = true;
-	}
+	}*/
+
+	WHBLogPrintf("do you");
+    WHBLogConsoleDraw();
+
+	
+	WHBLogPrintf(name);
+    WHBLogConsoleDraw();
 
 	clgame.hInstance = COM_LoadLibrary( name, false, false );
+
+	WHBLogPrintf("get to here?");
+    WHBLogConsoleDraw();
+
+	
 
 	if( !clgame.hInstance )
 		return false;
 
 	// delayed vgui initialization for internal support
-	if( GI->internal_vgui_support && VGui_LoadProgs( clgame.hInstance ))
+	/*if( GI->internal_vgui_support && VGui_LoadProgs( clgame.hInstance ))
 	{
 		VGui_Startup( refState.width, refState.height );
-	}
+	}*/
 
 	// clear exports
 	for( func = cdll_exports; func && func->name; func++ )

@@ -412,7 +412,7 @@ static qboolean R_LoadProgs( char *name )
 		//FS_AllowDirectPaths( false );
 		WHBLogPrintf( "R_LoadProgs: can't load renderer library %s: %s\n", name, COM_GetLibraryError() );
 		WHBLogConsoleDraw();
-		OSSleepTicks(OSMillisecondsToTicks(1000));
+		//OSSleepTicks(OSMillisecondsToTicks(1000));
 		return false;
 	}
 
@@ -517,7 +517,7 @@ static qboolean R_LoadRenderer( const char *refopt )
 		Shutdown();
 		WHBLogPrintf( "Can't initialize %s renderer!\n", refdll );
 		WHBLogConsoleDraw();
-		OSSleepTicks(OSMillisecondsToTicks(1000)); 
+		//OSSleepTicks(OSMillisecondsToTicks(1000)); 
 		return false;
 	}
 
@@ -526,7 +526,7 @@ static qboolean R_LoadRenderer( const char *refopt )
 	
 	WHBLogPrintf( "It loaded ig?" );
 	WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000)); 
+	//OSSleepTicks(OSMillisecondsToTicks(1000)); 
 
 	return true;
 }
@@ -650,7 +650,7 @@ qboolean Init( void )
 
 	WHBLogPrintf( modifiedSDCardPath );
 	WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000));
+	//OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	requested[4] = *"soft";
 

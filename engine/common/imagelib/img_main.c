@@ -276,7 +276,7 @@ static qboolean Image_ProbeLoad_( const loadpixformat_t *fmt, const char *name, 
 	FILE *fptr;
 
 	Q_snprintf( path, sizeof( path ), fmt->formatstring, name, suffix, fmt->ext );
-	prepend(path, sdPath);
+	prepend(path, "/vol/external01/wiiu/apps/xash3DU/valve/");
 
 	//f = FS_LoadFile( path, &filesize, false );
 

@@ -56,12 +56,11 @@ static const char *dlname( void *handle )
 
 void *dlopen( const char *name, int flag )
 {
-	prepend(name, "wiiu/apps/xash3DU/valve/cl_dlls/");
-	strcat(name, ".so");
+	//prepend(name);
 
 	WHBLogPrintf("dlopen: %s\n", name);
     WHBLogConsoleDraw();
-	OSSleepTicks(OSMillisecondsToTicks(1000));
+	//OSSleepTicks(OSMillisecondsToTicks(1000));
 
 	dll_t *d = dlfind( name );
 	if( d ) d->refcnt++;
