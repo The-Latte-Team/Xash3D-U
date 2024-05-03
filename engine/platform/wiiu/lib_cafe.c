@@ -35,7 +35,6 @@ GNU General Public License for more details.
 #include <coreinit/time.h>
 #include <whb/sdcard.h>
 #include "cafe_utils.h"
-#include "dll_cafe.h"
 #endif
 
 #ifdef XASH_DLL_LOADER // wine-based dll loader
@@ -47,41 +46,6 @@ const char * Loader_GetFuncName( void *hndl, void *func);
 const char * Loader_GetFuncName_int( void *wm , void *func);
 #endif
 
-
-#ifdef XASH_NO_LIBDL
-#ifndef XASH_DLL_LOADER
-#error Enable at least one dll backend!!!
-#endif // XASH_DLL_LOADER
-
-void *dlsym(void *handle, const char *symbol )
-{
-	Con_DPrintf( "dlsym( %p, \"%s\" ): stub\n", handle, symbol );
-	return NULL;
-}
-
-void *dlopen(const char *name, int flag )
-{
-	Con_DPrintf( "dlopen( \"%s\", %d ): stub\n", name, flag );
-	return NULL;
-}
-
-int dlclose(void *handle)
-{
-	Con_DPrintf( "dlsym( %p ): stub\n", handle );
-	return 0;
-}
-
-char *dlerror( void )
-{
-	return "Loading ELF libraries not supported in this build!\n";
-}
-
-int dladdr( const void *addr, Dl_info *info )
-{
-	return 0;
-}
-#endif // XASH_NO_LIBDL
-
 qboolean COM_CheckLibraryDirectDependency( const char *name, const char *depname, qboolean directpath )
 {
 	// TODO: implement
@@ -92,8 +56,6 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 {
 	dll_user_t *hInst = NULL;
 	void *pHandle = NULL;
-
-	COM_ResetLibraryError();
 
 	// platforms where gameinfo mechanism is impossible
 #ifdef Platform_POSIX_LoadLibrary
@@ -121,6 +83,8 @@ void *COM_LoadLibrary( const char *dllname, int build_ordinals_table, qboolean d
 				return pHandle;
 
 			COM_PushLibraryError( va( "Failed to find library %s", dllname ));
+			WHBLogPrintf("Failed to find library %s", dllname);
+   			WHBLogConsoleDraw();
 			COM_PushLibraryError( dlerror() );
 			return NULL;
 		}
@@ -180,6 +144,8 @@ void COM_FreeLibrary( void *hInstance )
 #ifdef Platform_POSIX_FreeLibrary
 		Platform_POSIX_FreeLibrary( hInstance );
 #else
+		WHBLogPrintf( "ITS THIS FUNCTION?????" );
+		WHBLogConsoleDraw();
 		dlclose( hInstance );
 #endif
 	}

@@ -271,32 +271,19 @@ static qboolean Image_ProbeLoad_( const loadpixformat_t *fmt, const char *name, 
 	FILE *fptr;
 
 	Q_snprintf( path, sizeof( path ), fmt->formatstring, name, suffix, fmt->ext );
-	WHBLogPrintf(path);
-    WHBLogConsoleDraw();
-
-	prepend(path, "/vol/external01/wiiu/apps/xash3DU/valve/");
-
-	WHBLogPrintf(path);
-    WHBLogConsoleDraw();
 
 	//f = FS_LoadFile( path, &filesize, false );
 
-	
 	if( fptr = fopen( path, "rb" ) != NULL )
 	{
-		WHBLogPrintf("it doesn't open orrrrrr?");
-    	WHBLogConsoleDraw();
 		f = fptr;
 		filesize = f;
-
-		WHBLogPrintf("you ded");
-    	WHBLogConsoleDraw();
 
 		success = Image_ProbeLoadBuffer( fmt, path, f, filesize, override_hint );
 
 		//Mem_Free( f );
+		fclose(fptr);
 	}
-	//fclose(fptr);
 
 	return success;
 }

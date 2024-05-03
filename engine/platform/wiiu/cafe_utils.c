@@ -13,8 +13,6 @@
 #include <coreinit/time.h>
 #endif
 
-char *sdCard;
-
 /* Prepends t into s. Assumes s has enough space allocated
 ** for the combined string.
 */

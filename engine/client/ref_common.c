@@ -5,6 +5,7 @@
 #include "platform/platform.h"
 #include "vid_common.h"
 #include "crtlib.h"
+#include "ref_api.h"
 
 #if XASH_WIIU
 #include <vpad/input.h>
@@ -416,42 +417,68 @@ static qboolean R_LoadProgs( char *name )
 		return false;
 	}
 
+	WHBLogPrintf( "i swear" );
+	WHBLogConsoleDraw();
+
 	//FS_AllowDirectPaths( false );
 
 	if( !( GetRefAPI = (REFAPI)COM_GetProcAddress( ref.hInstance, GET_REF_API )) )
 	{
 		COM_FreeLibrary( ref.hInstance );
 		Con_Reportf( "R_LoadProgs: can't find GetRefAPI entry point in %s\n", name );
+		WHBLogPrintf( "R_LoadProgs: can't find GetRefAPI entry point in %s\n", name );
+		WHBLogConsoleDraw();
 		ref.hInstance = NULL;
 		return false;
 	}
 
+	WHBLogPrintf( "i have no clue" );
+	WHBLogConsoleDraw();
+
 	// make local copy of engfuncs to prevent overwrite it with user dll
 	memcpy( &gpEngfuncs, &gEngfuncs, sizeof( gpEngfuncs ));
+
+	WHBLogPrintf( "no way" );
+	WHBLogConsoleDraw();
 
 	if( GetRefAPI( REF_API_VERSION, &ref.dllFuncs, &gpEngfuncs, &refState ) != REF_API_VERSION )
 	{
 		COM_FreeLibrary( ref.hInstance );
 		Con_Reportf( "R_LoadProgs: can't init renderer API: wrong version\n" );
+		WHBLogPrintf( "R_LoadProgs: can't init renderer API: wrong version\n" );
+		WHBLogConsoleDraw();
 		ref.hInstance = NULL;
 		return false;
 	}
 
 	refState.developer = host_developer.value;
 
+	WHBLogPrintf( "its not" );
+	WHBLogConsoleDraw();
+
 	if( !ref.dllFuncs.R_Init( ) )
 	{
 		COM_FreeLibrary( ref.hInstance );
 		Con_Reportf( "R_LoadProgs: can't init renderer!\n" ); //, ref.dllFuncs.R_GetInitError() );
+		WHBLogPrintf( "R_LoadProgs: can't init renderer!\n" );
+		WHBLogConsoleDraw();
 		ref.hInstance = NULL;
 		return false;
 	}
 
+	WHBLogPrintf( "this func" );
+	WHBLogConsoleDraw();
+
 	Cvar_FullSet( "host_refloaded", "1", FCVAR_READ_ONLY );
 	ref.initialized = true;
 
+	WHBLogPrintf("nah");
+	WHBLogConsoleDraw();
+
 	// initialize TriAPI callbacks
 	CL_FillTriAPIFromRef( &gTriApi, &ref.dllFuncs );
+	WHBLogPrintf("imagiene");
+	WHBLogConsoleDraw();
 
 	return true;
 }
@@ -652,7 +679,7 @@ qboolean Init( void )
 	WHBLogConsoleDraw();
 	//OSSleepTicks(OSMillisecondsToTicks(1000));
 
-	requested[4] = *"soft";
+	requested[4] = *"soft"; //Force software renderer?
 
 	WHBLogPrintf("huh");
     WHBLogConsoleDraw();
@@ -665,7 +692,6 @@ qboolean Init( void )
 	WHBLogPrintf("hussh");
     WHBLogConsoleDraw();
 
-	//Force software renderer?
 	if( !success && Sys_GetParmFromCmdLine( "-ref", requested ))
 		success = R_LoadRenderer( requested );
 
@@ -675,9 +701,9 @@ qboolean Init( void )
 	WHBLogPrintf("no success?");
     WHBLogConsoleDraw();
 
-	if( !success /*&& COM_CheckString( r_refdll.string )*/)
+	if( !success && COM_CheckString( r_refdll.string ))
 	{
-		//Q_strncpy( requested, r_refdll.string, sizeof( requested ));
+		Q_strncpy( requested, r_refdll.string, sizeof( requested ));
 		success = R_LoadRenderer( requested );
 	}
 

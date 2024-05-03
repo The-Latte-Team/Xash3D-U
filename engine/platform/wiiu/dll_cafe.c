@@ -56,12 +56,6 @@ static const char *dlname( void *handle )
 
 void *dlopen( const char *name, int flag )
 {
-	//prepend(name);
-
-	WHBLogPrintf("dlopen: %s\n", name);
-    WHBLogConsoleDraw();
-	//OSSleepTicks(OSMillisecondsToTicks(1000));
-
 	dll_t *d = dlfind( name );
 	if( d ) d->refcnt++;
 	else dll_err = "dlopen(): unknown dll name"; 

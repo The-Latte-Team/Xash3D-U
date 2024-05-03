@@ -227,7 +227,6 @@ int main(int argc, char **argv)
             chdir(valveSDCardPath);
 
             //Launch the game
-            //glw_state.software = true; //force it to be always software
             szArgc = argc;
 	        szArgv = argv;
 	        Sys_Start();
@@ -236,11 +235,10 @@ int main(int argc, char **argv)
             WHBLogPrintf("If we're here, game didn't load");
             WHBLogConsoleDraw();
             displayed = true;
-            //break; do not
-            //exit(0);
         }
     }
 
+    SDL_Quit();
     WHBLogConsoleFree();
     WHBUnmountSdCard();
     WHBProcShutdown();

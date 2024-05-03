@@ -85,7 +85,8 @@ INCLUDES	:=	include/sys \
 				3rdparty/mainui/sdk_includes/common \
 				3rdparty/mainui/sdk_includes/engine \
 				3rdparty/mainui/sdk_includes/pm_shared \
-				ref/soft/include
+				ref/soft/include \
+				ref/soft
 CONTENT		:=
 ICON		:=	engine/platform/wiiu/icon.png
 TV_SPLASH	:=

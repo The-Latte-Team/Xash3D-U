@@ -25,7 +25,6 @@ int r_cnumsurfs;
 
 ref_instance_t	RI;
 
-
 // quake defines. will be refactored
 
 // view origin
@@ -1840,13 +1839,11 @@ static void R_InitTurb (void)
 }
 
 
-
 qboolean GAME_EXPORT R_Init( void )
 {
 	qboolean glblit = false;
 
-	RETRIEVE_ENGINE_SHARED_CVAR_LIST();
-
+	//DEFINE_ENGINE_SHARED_CVAR_LIST();
 
 	gEngfuncs.Cvar_RegisterVariable( &sw_clearcolor );
 	gEngfuncs.Cvar_RegisterVariable( &sw_drawflat );

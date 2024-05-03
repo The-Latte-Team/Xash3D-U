@@ -690,9 +690,6 @@ typedef int (*REFAPI)( int version, ref_interface_t *pFunctionTable, ref_api_t* 
 
 #define DEFINE_ENGINE_SHARED_CVAR_LIST() \
 	ENGINE_SHARED_CVAR_LIST( DEFINE_ENGINE_SHARED_CVAR )
-
-#define RETRIEVE_ENGINE_SHARED_CVAR_LIST() \
-	ENGINE_SHARED_CVAR_LIST( RETRIEVE_ENGINE_SHARED_CVAR )
 #endif
 
 #endif // REF_API

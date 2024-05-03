@@ -32,13 +32,6 @@ GNU General Public License for more details.
 #include <coreinit/exit.h>
 #include "dll_cafe.h"
 
-void setup_dll_funcs()
-{
-	WHBLogPrintf("TBD ;)");
-	WHBLogConsoleDraw();
-	//dll_register( "libref_soft.so", graphics_exports );
-}
-
 void Platform_ShellExecute( const char *path, const char *parms )
 {
 	Con_Reportf( S_WARN "Tried to shell execute ;%s; -- not supported\n", path );
@@ -50,7 +43,6 @@ void Cafe_Init( void ) {
 	
 	WHBLogPrintf("Setting up dll hack...");
 	WHBLogConsoleDraw();
-
 	setup_dll_funcs();
 
 	WHBLogPrintf("Done");
@@ -58,13 +50,4 @@ void Cafe_Init( void ) {
 }
 
 void Cafe_Shutdown( void ) //Should I leave this function like this? No. I'm leaving it anyways? Yes.
-{
-	/*WHBProcStopRunning();
-	//ProcUIShutdown();
-	
-	WHBLogConsoleFree();
-    WHBProcShutdown();
-	WHBUnmountSdCard();
-	exit(0);
-	return;*/
-}
+{ }
