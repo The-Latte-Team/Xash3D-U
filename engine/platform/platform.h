@@ -122,6 +122,8 @@ static inline void Platform_Init( void )
 	DOS_Init( );
 #elif XASH_WIN32
 	Wcon_CreateConsole( );
+#elif XASH_WIIU
+	Cafe_Init( );
 #elif XASH_LINUX
 	Linux_Init( );
 #endif
