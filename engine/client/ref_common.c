@@ -5,7 +5,6 @@
 #include "platform/platform.h"
 #include "vid_common.h"
 #include "crtlib.h"
-#include "ref_api.h"
 
 #if XASH_WIIU
 #include <vpad/input.h>
@@ -443,6 +442,9 @@ static qboolean R_LoadProgs( char *name )
 
 	if( GetRefAPI( REF_API_VERSION, &ref.dllFuncs, &gpEngfuncs, &refState ) != REF_API_VERSION )
 	{
+		WHBLogPrintf( "imagen" );
+		WHBLogConsoleDraw();
+
 		COM_FreeLibrary( ref.hInstance );
 		Con_Reportf( "R_LoadProgs: can't init renderer API: wrong version\n" );
 		WHBLogPrintf( "R_LoadProgs: can't init renderer API: wrong version\n" );
@@ -450,6 +452,9 @@ static qboolean R_LoadProgs( char *name )
 		ref.hInstance = NULL;
 		return false;
 	}
+
+	WHBLogPrintf( "you fucking prick" );
+	WHBLogConsoleDraw();
 
 	refState.developer = host_developer.value;
 

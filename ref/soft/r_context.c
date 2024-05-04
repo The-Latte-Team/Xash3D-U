@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-#include "r_local.h"
+#include "r_context.h"
 
 ref_api_t      gEngfuncs;
 ref_globals_t *gpGlobals;
@@ -548,7 +548,6 @@ ref_interface_t gReffuncs =
 	VGUI_GenerateTexture,
 };
 
-#include "r_context.h"
 int EXPORT GetRefAPI( int version, ref_interface_t *funcs, ref_api_t *engfuncs, ref_globals_t *globals )
 {
 	if( version != REF_API_VERSION )

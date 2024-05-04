@@ -13,13 +13,29 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
+
 #include "r_local.h"
+#include "ref_api.h"
 #include "xash3d_mathlib.h"
 #include "lib_common.h"
 //#include "beamdef.h"
 //#include "particledef.h"
 #include "entity_types.h"
 #include "mod_local.h"
+
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
+#endif
+
 int r_cnumsurfs;
 #define IsLiquidContents( cnt )	( cnt == CONTENTS_WATER || cnt == CONTENTS_SLIME || cnt == CONTENTS_LAVA )
 
@@ -1843,7 +1859,7 @@ qboolean GAME_EXPORT R_Init( void )
 {
 	qboolean glblit = false;
 
-	//DEFINE_ENGINE_SHARED_CVAR_LIST();
+	RETRIEVE_ENGINE_SHARED_CVAR_LIST();
 
 	gEngfuncs.Cvar_RegisterVariable( &sw_clearcolor );
 	gEngfuncs.Cvar_RegisterVariable( &sw_drawflat );
@@ -1872,6 +1888,8 @@ qboolean GAME_EXPORT R_Init( void )
 	{
 		gEngfuncs.R_Free_Video();
 		gEngfuncs.Con_Printf("failed to initialize software blitter, fallback to glblit\n");
+		WHBLogPrintf("failed to initialize software blitter, fallback to glblit\n");
+    	WHBLogConsoleDraw();
 		glblit = true;
 	}
 

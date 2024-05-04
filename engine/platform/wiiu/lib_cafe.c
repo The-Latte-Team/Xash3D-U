@@ -144,8 +144,6 @@ void COM_FreeLibrary( void *hInstance )
 #ifdef Platform_POSIX_FreeLibrary
 		Platform_POSIX_FreeLibrary( hInstance );
 #else
-		WHBLogPrintf( "ITS THIS FUNCTION?????" );
-		WHBLogConsoleDraw();
 		dlclose( hInstance );
 #endif
 	}

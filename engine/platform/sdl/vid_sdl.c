@@ -19,6 +19,19 @@ GNU General Public License for more details.
 #include "vid_common.h"
 #include "platform/sdl/events.h"
 
+#if XASH_WIIU
+#include <vpad/input.h>
+#include <coreinit/screen.h>
+#include <coreinit/cache.h>
+#include <whb/proc.h>
+#include <whb/log_console.h>
+#include <whb/log.h>
+#include <coreinit/thread.h>
+#include <whb/sdcard.h>
+#include <coreinit/time.h>
+#include "cafe_utils.h"
+#endif
+
 static vidmode_t *vidmodes = NULL;
 static int num_vidmodes = 0;
 static void GL_SetupAttributes( void );
@@ -1015,7 +1028,7 @@ qboolean R_Init_Video( const int type )
 	SDL_SetHint( SDL_HINT_QTWAYLAND_CONTENT_ORIENTATION, "landscape" );
 #endif
 
-#if SDL_VERSION_ATLEAST( 2, 0, 0 ) && !XASH_WIN32
+#if SDL_VERSION_ATLEAST( 2, 0, 0 ) && !XASH_WIN32 && !XASH_WIIU
 	SDL_SetHint( "SDL_VIDEO_X11_XRANDR", "1" );
 	SDL_SetHint( "SDL_VIDEO_X11_XVIDMODE", "1" );
 	if( Sys_CheckParm( "-egl" ) )
@@ -1033,10 +1046,12 @@ qboolean R_Init_Video( const int type )
 		glw_state.software = true;
 		break;
 	case REF_GL:
-		glw_state.software = true;
+		glw_state.software = true; //Force software just in case ;)
 		break;
 	default:
 		Host_Error( "Can't initialize unknown context type %d!\n", type );
+		WHBLogPrintf("failed to initialize software blitter, fallback to glblit\n");
+    	WHBLogConsoleDraw();
 		break;
 	}
 
