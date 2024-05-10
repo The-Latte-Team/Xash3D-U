@@ -50,7 +50,7 @@ GNU General Public License for more details.
 
 #include "menu_int.h" // _UPDATE_PAGE macro
 
-#include "lib_common.h"
+#include "library.h"
 #include "whereami.h"
 
 int error_on_exit = 0;	// arg for exit();

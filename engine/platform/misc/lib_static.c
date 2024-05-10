@@ -14,7 +14,7 @@ GNU General Public License for more details.
 */
 
 #include "platform/platform.h"
-#include "lib_common.h"
+#include "library.h"
 #if XASH_LIB == LIB_STATIC
 #ifdef XASH_NO_LIBDL
 

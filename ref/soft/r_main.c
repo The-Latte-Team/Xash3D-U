@@ -15,25 +15,20 @@ GNU General Public License for more details.
 
 
 #include "r_local.h"
-#include "ref_api.h"
 #include "xash3d_mathlib.h"
-#include "lib_common.h"
+#include "library.h"
 //#include "beamdef.h"
 //#include "particledef.h"
 #include "entity_types.h"
 #include "mod_local.h"
 
 #if XASH_WIIU
-#include <vpad/input.h>
 #include <coreinit/screen.h>
 #include <coreinit/cache.h>
 #include <whb/proc.h>
 #include <whb/log_console.h>
 #include <whb/log.h>
 #include <coreinit/thread.h>
-#include <whb/sdcard.h>
-#include <coreinit/time.h>
-#include "cafe_utils.h"
 #endif
 
 int r_cnumsurfs;

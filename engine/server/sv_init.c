@@ -16,7 +16,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "server.h"
 #include "net_encode.h"
-#include "lib_common.h"
+#include "library.h"
 #include "voice.h"
 #include "pm_local.h"
 

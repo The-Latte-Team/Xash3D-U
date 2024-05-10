@@ -18,7 +18,7 @@ GNU General Public License for more details.
 #include "vgui_draw.h"
 #include "qfont.h"
 #include "input.h"
-#include "lib_common.h"
+#include "library.h"
 
 CVAR_DEFINE_AUTO( scr_centertime, "2.5", 0, "centerprint hold time" );
 CVAR_DEFINE_AUTO( scr_loading, "0", 0, "loading bar progress" );

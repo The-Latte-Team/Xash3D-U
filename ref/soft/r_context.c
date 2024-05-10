@@ -12,8 +12,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
-
-#include "r_context.h"
+#include "r_local.h"
 
 ref_api_t      gEngfuncs;
 ref_globals_t *gpGlobals;
@@ -548,6 +547,7 @@ ref_interface_t gReffuncs =
 	VGUI_GenerateTexture,
 };
 
+int EXPORT GetRefAPI( int version, ref_interface_t *funcs, ref_api_t *engfuncs, ref_globals_t *globals );
 int EXPORT GetRefAPI( int version, ref_interface_t *funcs, ref_api_t *engfuncs, ref_globals_t *globals )
 {
 	if( version != REF_API_VERSION )

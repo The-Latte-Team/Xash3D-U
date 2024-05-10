@@ -17,7 +17,7 @@ GNU General Public License for more details.
 #include "dll_cafe.h"
 
 #include "common.h"
-#include "lib_common.h"
+#include "library.h"
 #include "filesystem.h"
 #include "server.h"
 #include "platform/android/lib_android.h"

@@ -17,7 +17,7 @@ GNU General Public License for more details.
 #include "server.h"
 #include "net_encode.h"
 #include "event_flags.h"
-#include "lib_common.h"
+#include "library.h"
 #include "pm_defs.h"
 #include "studio.h"
 #include "const.h"

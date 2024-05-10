@@ -17,7 +17,7 @@ GNU General Public License for more details.
 */
 
 #include "common.h"
-#include "lib_common.h"
+#include "library.h"
 #include "platform.h"
 #if XASH_WIIU
 #include "dll_cafe.h"

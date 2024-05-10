@@ -15,7 +15,7 @@ GNU General Public License for more details.
 
 #include "common.h"
 #include "client.h"
-#include "lib_common.h"
+#include "library.h"
 #include "platform/platform.h"
 
 int R_FatPVS( const vec3_t org, float radius, byte *visbuffer, qboolean merge, qboolean fullvis )

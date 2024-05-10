@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 #include "common.h"
-#include "lib_common.h"
+#include "library.h"
 #include "filesystem.h"
 #include "server.h"
 #include "platform/android/lib_android.h"

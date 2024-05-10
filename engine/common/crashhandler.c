@@ -325,7 +325,7 @@ void Sys_RestoreCrashHandler( void )
 #endif
 #include <signal.h>
 #include <sys/mman.h>
-#include "lib_common.h"
+#include "library.h"
 
 #define STACK_BACKTRACE_STR     "Stack backtrace:\n"
 #define STACK_DUMP_STR          "Stack dump:\n"

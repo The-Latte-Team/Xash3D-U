@@ -16,7 +16,7 @@ GNU General Public License for more details.
 #include "common.h"
 #include "client.h"
 #include "const.h"
-#include "lib_common.h"
+#include "library.h"
 #include "input.h"
 #include "server.h" // !!svgame.hInstance
 #include "vid_common.h"

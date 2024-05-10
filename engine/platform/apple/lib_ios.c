@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #if TARGET_OS_IPHONE
 #include <SDL.h>
 #include "common.h"
-#include "lib_common.h"
+#include "library.h"
 #include "filesystem.h"
 #include "server.h"
 #include "platform/apple/ios_lib.h"
