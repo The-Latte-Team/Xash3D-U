@@ -104,7 +104,7 @@ CXXFLAGS	:= $(CFLAGS)
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lSDL2 -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lwut -lm -lstdc++ -lcurl #Yes, SDL2 libraries has to be first for it to compile :D
+LIBS	:= -lSDL2 -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx -lwut -lm -lstdc++ -lcurl #Yes, SDL2 libraries has to be first for it to compile :D
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level
