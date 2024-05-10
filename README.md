@@ -37,7 +37,6 @@ NOTE: NEVER USE GitHub's ZIP ARCHIVES. GitHub doesn't include external dependenc
 ### Prerequisites
 
 - [wut](https://github.com/devkitPro/wut)
-- [libmocha](https://github.com/wiiu-env/libmocha)
 - [wiiu-sdl2](https://github.com/devkitPro/SDL/tree/wiiu-sdl2-2.28)
 - wiiu-sdl2_gfx
 - wiiu-sdl2_mixer
