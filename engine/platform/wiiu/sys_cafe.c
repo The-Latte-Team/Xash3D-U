@@ -34,7 +34,8 @@ GNU General Public License for more details.
 
 void Platform_ShellExecute( const char *path, const char *parms )
 {
-	Con_Reportf( S_WARN "Tried to shell execute ;%s; -- not supported\n", path );
+	WHBLogPrintf( S_WARN "Tried to shell execute ;%s; -- not supported\n", path );
+	WHBLogConsoleDraw();
 }
 
 void Cafe_Init( void ) {
@@ -49,5 +50,5 @@ void Cafe_Init( void ) {
 	WHBLogConsoleDraw();
 }
 
-void Cafe_Shutdown( void ) //Should I leave this function like this? No. I'm leaving it anyways? Yes.
+void Cafe_Shutdown( void )
 { }

@@ -35,7 +35,6 @@ include $(DEVKITPRO)/wut/share/wut_rules
 TARGET		:=	Xash3DU
 BUILD		:=	build
 SOURCES		:=	include \
-				ref/soft \
 				engine/common \
 				engine/common/imagelib \
 				engine/common/soundlib \
@@ -48,7 +47,8 @@ SOURCES		:=	include \
 				engine/platform/wiiu \
 				engine/platform/sdl \
 				engine/platform/stub \
-				public 
+				public \
+				ref/soft
 DATA		:=	data
 INCLUDES	:=	include/sys \
 				include/netinet \
